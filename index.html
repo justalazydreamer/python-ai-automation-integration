@@ -1,627 +1,370 @@
-<!DOCTYPE html>
-<html lang="tl">
+<!doctype html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CYBER//QUEST — 90-Day Automation Grind</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b12">
+<title>NEON//OPS — Python AI Automation Campaign</title>
 <style>
 :root{
-  --bg:#070812;
-  --bg2:#0c1020;
-  --panel:rgba(12,16,32,.90);
-  --panel2:rgba(18,23,44,.92);
-  --line:#252c4e;
-  --text:#eef3ff;
-  --mut:#8d98b8;
-  --cyan:#34f5ff;
-  --pink:#ff3cac;
-  --purple:#9b5cff;
-  --lime:#b8ff4a;
-  --amber:#ffcc66;
-  --danger:#ff4d6d;
-  --shadow:0 0 28px rgba(52,245,255,.10), 0 0 60px rgba(255,60,172,.06);
+  --bg:#080a11;--panel:#101521;--panel2:#141b29;--line:#273246;--text:#edf3ff;--muted:#94a3b8;
+  --cyan:#53f3ed;--pink:#ff4fd8;--purple:#9c7bff;--lime:#c4ff72;--amber:#ffc66e;--red:#ff698b;
+  --shadow:0 18px 55px rgba(0,0,0,.35);--radius:18px;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  min-height:100vh;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 15% 10%, rgba(52,245,255,.10), transparent 26%),
-    radial-gradient(circle at 85% 8%, rgba(255,60,172,.10), transparent 28%),
-    linear-gradient(180deg,#05060d 0%,#070812 42%,#0a0d18 100%);
-  font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  overflow-x:hidden;
-}
-body::before{
-  content:"";
-  position:fixed; inset:0; pointer-events:none; opacity:.11;
-  background:
-    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-  background-size:32px 32px;
-  mask-image:linear-gradient(to bottom,black,transparent 85%);
-}
-main{max-width:1180px;margin:0 auto;padding:24px 18px 90px;position:relative}
-.hero{
-  position:relative; overflow:hidden; border:1px solid var(--line);
-  border-radius:22px; padding:26px 24px; background:
-  linear-gradient(135deg,rgba(20,26,54,.96),rgba(10,12,25,.96));
-  box-shadow:var(--shadow);
-}
-.hero::after{
-  content:""; position:absolute; width:360px;height:360px;right:-140px;top:-170px;
-  border-radius:50%; border:1px solid rgba(52,245,255,.18);
-  box-shadow:0 0 80px rgba(52,245,255,.10),inset 0 0 60px rgba(255,60,172,.06);
-}
-.kicker{font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.22em;color:var(--cyan);text-transform:uppercase}
-h1{
-  margin:8px 0 8px; font-size:clamp(2rem,5vw,3.9rem); line-height:.96;
-  letter-spacing:-.055em; max-width:760px;
-  text-shadow:0 0 18px rgba(52,245,255,.18);
-}
-.glitch{position:relative;display:inline-block}
-.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;opacity:.55;pointer-events:none}
-.glitch::before{color:var(--cyan);transform:translate(1px,0)}
-.glitch::after{color:var(--pink);transform:translate(-1px,0)}
-.sub{color:var(--mut);max-width:760px;margin:0}
-.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
-.badge{
-  display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border:1px solid var(--line);
-  border-radius:999px;background:rgba(255,255,255,.03);font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace;
-}
-.badge.hot{color:var(--cyan);border-color:rgba(52,245,255,.32);box-shadow:inset 0 0 14px rgba(52,245,255,.05)}
-.badge.pink{color:#ff9ad7;border-color:rgba(255,60,172,.30)}
-.badge.lime{color:var(--lime);border-color:rgba(184,255,74,.25)}
-.hud{
-  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin:16px 0;
-}
-.stat{
-  min-height:88px;padding:12px 12px;border-radius:16px;border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(18,23,44,.92),rgba(10,13,27,.92));
-  box-shadow:0 0 22px rgba(0,0,0,.16);
-}
-.stat .label{font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mut);letter-spacing:.1em;text-transform:uppercase}
-.stat .value{font-size:1.55rem;font-weight:850;margin-top:4px;letter-spacing:-.03em}
-.stat .tiny{font-size:11px;color:var(--mut)}
-.neon{color:var(--cyan);text-shadow:0 0 14px rgba(52,245,255,.25)}
-.pinktxt{color:var(--pink);text-shadow:0 0 14px rgba(255,60,172,.20)}
-.limetxt{color:var(--lime);text-shadow:0 0 14px rgba(184,255,74,.18)}
-.panel{
-  border:1px solid var(--line);border-radius:18px;background:var(--panel);
-  box-shadow:var(--shadow);margin:14px 0;padding:16px;
-}
-.panel h2{margin:0 0 8px;font-size:1rem;letter-spacing:.02em}
-.panel p{margin:4px 0;color:var(--mut)}
-.contract-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
-.contract{
-  padding:16px;border-radius:16px;border:1px solid rgba(52,245,255,.18);
-  background:
-    linear-gradient(135deg,rgba(52,245,255,.05),rgba(155,92,255,.04) 45%,rgba(255,60,172,.05));
-}
-.contract .eyebrow{font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan);letter-spacing:.14em;text-transform:uppercase}
-.contract h3{margin:6px 0 6px;font-size:1.35rem}
-.contract .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chip{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid var(--line);padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.025)}
-.quest-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-button,.fakebtn{
-  border:1px solid var(--line);color:var(--text);background:#11162b;border-radius:10px;
-  padding:9px 12px;font-weight:800;cursor:pointer;
-}
-button:hover,.fakebtn:hover{border-color:rgba(52,245,255,.35);box-shadow:0 0 16px rgba(52,245,255,.08)}
-button.primary{border-color:rgba(52,245,255,.40);color:var(--cyan);background:rgba(52,245,255,.07)}
-button.warn{border-color:rgba(255,204,102,.35);color:var(--amber);background:rgba(255,204,102,.06)}
-button.pink{border-color:rgba(255,60,172,.35);color:#ff9ad7;background:rgba(255,60,172,.06)}
-.timer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px dashed rgba(52,245,255,.22);border-radius:14px;background:#090d1b}
-.timer .time{font:900 clamp(2rem,7vw,3.6rem)/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan);text-shadow:0 0 18px rgba(52,245,255,.18)}
-.timer .state{font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mut);text-transform:uppercase}
-.progress-wrap{margin-top:10px}
-.track{height:10px;background:#151a31;border:1px solid #272e4d;border-radius:999px;overflow:hidden}
-.track i{
-  display:block;height:100%;width:0;
-  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink));
-  box-shadow:0 0 18px rgba(52,245,255,.22);transition:width .35s ease;
-}
-.track.big{height:13px}
-.level-row{display:flex;justify-content:space-between;gap:10px;align-items:end;font-size:12px;color:var(--mut)}
-.level-row strong{color:var(--text)}
-.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.mode{
-  padding:13px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.018);
-}
-.mode h3{margin:0 0 4px;font-size:.9rem}
-.mode p{font-size:12px}
-.mode.active{border-color:rgba(184,255,74,.28);box-shadow:inset 0 0 22px rgba(184,255,74,.025)}
-.why{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-}
-.why textarea{
-  width:100%;min-height:110px;resize:vertical;padding:11px 12px;
-  color:var(--text);background:#080c18;border:1px solid var(--line);border-radius:12px;
-  outline:none;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;
-}
-.why textarea:focus{border-color:rgba(52,245,255,.35);box-shadow:0 0 18px rgba(52,245,255,.07)}
-details.w{
-  margin:12px 0;border:1px solid var(--line);border-radius:16px;background:var(--panel);
-  overflow:hidden;box-shadow:0 0 18px rgba(0,0,0,.14);
-}
-details.w>summary{
-  cursor:pointer;padding:14px 16px;font:800 .98rem ui-sans-serif,system-ui,sans-serif;
-  list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center;
-  background:linear-gradient(90deg,rgba(52,245,255,.025),rgba(255,60,172,.015));
-}
-details.w>summary::-webkit-details-marker{display:none}
-details.w>summary::after{content:"+";color:var(--cyan);font:900 18px ui-monospace}
-details.w[open]>summary::after{content:"−"}
-details.w>summary small{display:block;font-weight:500;color:var(--mut);font-size:11px;margin-top:2px}
-.week-title{display:flex;flex-direction:column;gap:2px}
-.week-tag{font:700 9px ui-monospace;color:var(--pink);letter-spacing:.14em;text-transform:uppercase}
-.d{
-  padding:12px 14px;border-top:1px solid rgba(37,44,78,.75);
-  background:linear-gradient(90deg,rgba(255,255,255,.006),transparent);
-}
-.d label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
-.d input{
-  margin-top:5px;accent-color:var(--cyan);width:19px;height:19px;flex:none;
-  filter:drop-shadow(0 0 6px rgba(52,245,255,.24));
-}
-.d b{font-family:ui-sans-serif,system-ui,sans-serif}
-.d p{margin:2px 0 6px;color:var(--mut);font-size:.9rem}
-.d.done{background:linear-gradient(90deg,rgba(184,255,74,.045),transparent)}
-.d.done b{text-decoration:line-through;opacity:.63}
-.d .day-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
-.xpchip,.projectchip{
-  font:800 9px ui-monospace;color:var(--lime);letter-spacing:.08em;text-transform:uppercase;
-  padding:3px 7px;border-radius:999px;border:1px solid rgba(184,255,74,.22);background:rgba(184,255,74,.045)
-}
-.projectchip{color:#ff9ad7;border-color:rgba(255,60,172,.22);background:rgba(255,60,172,.045)}
-.ln{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0 29px}
-.ln a{
-  font:700 11px ui-sans-serif,system-ui,sans-serif;color:#b8c6ff;background:rgba(120,133,255,.06);
-  padding:4px 8px;border-radius:8px;text-decoration:none;border:1px solid #262e4f
-}
-.ln a:hover,.ln a:focus-visible{outline:2px solid var(--cyan);color:var(--text)}
-footer{color:var(--mut);font-size:.78rem;margin-top:28px;text-align:center}
-.scanline{height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.55;margin:14px 0}
-.muted{color:var(--mut)}
-@media(max-width:980px){.hud{grid-template-columns:repeat(3,1fr)}.contract-grid{grid-template-columns:1fr}.mode-grid{grid-template-columns:1fr}.why{grid-template-columns:1fr}}
-@media(max-width:620px){
-  main{padding:14px 10px 60px}.hero{padding:20px 16px}.hud{grid-template-columns:repeat(2,1fr)}
-  h1{font-size:2.4rem}.timer{flex-direction:column;align-items:flex-start}.contract h3{font-size:1.15rem}
-}
-
-.toasts{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:8px;z-index:50;max-width:min(340px,calc(100vw - 28px))}
-.toast{padding:11px 14px;border-radius:12px;border:1px solid rgba(184,255,74,.35);background:rgba(10,14,28,.96);box-shadow:0 0 24px rgba(184,255,74,.12);animation:tin .3s ease;font-size:13px}
-.toast b{display:block;color:var(--lime)}
-.toast.ach{border-color:rgba(255,204,102,.45)}.toast.ach b{color:var(--amber)}
-@keyframes tin{from{transform:translateX(30px);opacity:0}}
-.fx{position:fixed;pointer-events:none;z-index:60;font:900 18px ui-monospace,monospace;color:var(--lime);text-shadow:0 0 12px rgba(184,255,74,.6);animation:rise 1s ease-out forwards}
-@keyframes rise{to{transform:translateY(-70px);opacity:0}}
-.cf{position:fixed;width:8px;height:8px;pointer-events:none;z-index:60;animation:cf 1.2s ease-out forwards}
-@keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:0}}
-.ov{position:fixed;inset:0;display:grid;place-items:center;background:rgba(5,6,13,.84);z-index:70;padding:18px}
-.ov .box{max-width:460px;width:100%;padding:24px;border:1px solid rgba(52,245,255,.35);border-radius:18px;background:var(--bg2);box-shadow:var(--shadow);text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
-.ov .box.lvl{border-color:rgba(255,60,172,.5)}
-.ov h2{margin:0 0 8px;font-size:1.7rem;color:var(--cyan);text-shadow:0 0 18px rgba(52,245,255,.3)}
-.ov .box.lvl h2{color:var(--pink)}
-.ov p{color:var(--mut);margin:6px 0}
-@keyframes pop{from{transform:scale(.7);opacity:0}}
-.timer.live{border-color:rgba(255,60,172,.55);animation:glow 1.6s ease-in-out infinite}
-@keyframes glow{50%{box-shadow:0 0 26px rgba(255,60,172,.22)}}
-.sp{margin-left:auto;font:800 10px ui-monospace,monospace;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--lime);background:linear-gradient(90deg,rgba(184,255,74,.28) var(--p,0%),transparent var(--p,0%))}
-.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:8px}
-.a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;opacity:.45;filter:grayscale(1)}
-.a.on{opacity:1;filter:none;border-color:rgba(255,204,102,.4);background:rgba(255,204,102,.05)}
-.a b{display:block;font-size:13px}.a small{color:var(--mut);font-size:11px}
-#mute{cursor:pointer;color:var(--text)}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:22px}
+body{margin:0;background:radial-gradient(ellipse at 75% -10%,rgba(156,123,255,.15),transparent 32%),radial-gradient(ellipse at 8% 28%,rgba(83,243,237,.075),transparent 25%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:10;opacity:.12;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.035) 4px);mix-blend-mode:screen}
+a{color:var(--cyan);text-decoration:none}a:hover{color:#fff;text-decoration:underline}button,input{font:inherit}button{cursor:pointer}
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+aside{border-right:1px solid var(--line);background:rgba(10,13,21,.92);padding:26px 18px;position:sticky;top:0;height:100vh;overflow:auto;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;margin:3px 6px 31px}.brand-mark{width:39px;height:39px;display:grid;place-items:center;border:1px solid var(--cyan);color:var(--cyan);font-weight:900;transform:rotate(-5deg);box-shadow:0 0 22px rgba(83,243,237,.2);clip-path:polygon(10% 0,100% 0,100% 82%,82% 100%,0 100%,0 12%)}.brand-title{font-weight:950;font-size:16px;letter-spacing:1.4px}.brand-sub{color:var(--muted);font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.nav-label{font-size:10px;letter-spacing:2px;color:#687790;font-weight:800;padding:0 10px;margin:18px 0 7px}.navlink{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:#b5c1d5;font-size:13px;margin:3px 0;border:1px solid transparent}.navlink:hover,.navlink.active{background:rgba(83,243,237,.07);border-color:rgba(83,243,237,.17);color:var(--cyan);text-decoration:none}.navicon{width:20px;text-align:center;font-size:15px}.side-progress{margin-top:28px;padding:15px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(83,243,237,.06),rgba(156,123,255,.04));border-radius:14px}.side-progress-head{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px}.meter{height:6px;background:#222b3a;border-radius:100px;overflow:hidden}.meter-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink));border-radius:inherit;transition:width .35s ease}.side-foot{font-size:10px;color:#60708a;margin:28px 8px 0;line-height:1.7}
+main{min-width:0;max-width:1500px;width:100%;padding:28px clamp(18px,3.1vw,48px) 60px;margin:0 auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:26px}.crumb{font-size:11px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase}.crumb b{color:var(--cyan)}.top-actions{display:flex;align-items:center;gap:8px}.status-pill{display:flex;align-items:center;gap:8px;border:1px solid #294338;padding:7px 11px;border-radius:999px;font-size:11px;color:#9be8c3;background:rgba(92,237,164,.06)}.dot{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+.hero{position:relative;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(220px,.75fr);gap:20px;align-items:center;border:1px solid #2b3448;border-radius:24px;padding:clamp(24px,4vw,48px);overflow:hidden;background:linear-gradient(112deg,rgba(17,24,38,.97) 0%,rgba(15,19,34,.95) 62%,rgba(33,17,44,.88) 100%);box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 58%,rgba(83,243,237,.055) 58.2%,transparent 58.6%),linear-gradient(70deg,transparent 0 77%,rgba(255,79,216,.08) 77.2%,transparent 77.8%);pointer-events:none}.hero-copy{position:relative;z-index:1}.eyebrow{font-size:10px;letter-spacing:3px;font-weight:900;color:var(--cyan);display:flex;align-items:center;gap:10px}.eyebrow:before{content:"";height:1px;width:25px;background:var(--cyan);box-shadow:0 0 9px var(--cyan)}h1{font-size:clamp(32px,4.5vw,60px);line-height:1.03;letter-spacing:-2px;margin:15px 0 16px;font-weight:950;text-transform:uppercase}h1 .accent{color:var(--cyan);text-shadow:0 0 22px rgba(83,243,237,.2)}.hero p{font-size:14px;max-width:650px;color:#aebbd0;margin:0 0 22px}.hero-buttons{display:flex;gap:10px;flex-wrap:wrap}.btn{border:1px solid #344057;background:#151d2c;color:var(--text);padding:10px 14px;border-radius:10px;font-size:12px;font-weight:800;letter-spacing:.3px;transition:transform .15s,border-color .15s}.btn:hover{transform:translateY(-1px);border-color:var(--cyan)}.btn-primary{background:var(--cyan);color:#071014;border-color:var(--cyan);box-shadow:0 0 20px rgba(83,243,237,.13)}.btn-primary:hover{color:#071014;background:#9afff6}.btn-quiet{background:transparent}.hero-art{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;min-height:230px}.art-frame{width:min(100%,310px);position:relative;filter:drop-shadow(0 0 26px rgba(83,243,237,.11))}.art-label{position:absolute;right:0;bottom:5px;font-size:9px;letter-spacing:2px;color:var(--pink);writing-mode:vertical-rl;text-transform:uppercase}.corner{position:absolute;width:28px;height:28px;border-color:var(--cyan);opacity:.8}.corner.tl{left:0;top:0;border-left:1px solid;border-top:1px solid}.corner.br{right:0;bottom:0;border-right:1px solid;border-bottom:1px solid}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 34px}.stat{padding:16px 17px;background:rgba(16,21,33,.9);border:1px solid var(--line);border-radius:15px;min-width:0}.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase}.stat-icon{font-size:16px;color:var(--cyan)}.stat-value{font-size:28px;letter-spacing:-1px;font-weight:900;margin:5px 0 1px}.stat-foot{font-size:11px;color:#798aa5}.rank{color:var(--lime)}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:37px 0 16px}.section-kicker{font-size:10px;color:var(--pink);letter-spacing:2.4px;font-weight:900;text-transform:uppercase}.section-head h2{margin:4px 0 0;font-size:24px;letter-spacing:-.7px}.section-desc{color:var(--muted);font-size:12px;max-width:510px;margin:0}.toolrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 17px}.searchbox{flex:1;min-width:190px;position:relative}.searchbox input{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 13px;outline:none;font-size:12px}.searchbox input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(83,243,237,.07)}.filter-btn{border:1px solid var(--line);border-radius:10px;color:#aab8ce;background:var(--panel);font-size:11px;font-weight:800;padding:10px 12px}.filter-btn.active{color:var(--cyan);border-color:rgba(83,243,237,.5);background:rgba(83,243,237,.08)}
+.zone{border:1px solid var(--line);background:rgba(16,21,33,.86);border-radius:18px;margin:13px 0;overflow:hidden}.zone[open]{border-color:#35465c}.zone summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:48px minmax(0,1fr) auto 20px;align-items:center;gap:14px;padding:18px 20px}.zone summary::-webkit-details-marker{display:none}.zone summary:hover{background:rgba(255,255,255,.018)}.zone-num{width:43px;height:43px;border:1px solid #3b4a61;border-radius:12px;display:grid;place-items:center;color:var(--cyan);font-size:12px;font-weight:950;background:linear-gradient(135deg,rgba(83,243,237,.08),rgba(156,123,255,.07))}.zone-name{font-size:15px;font-weight:900}.zone-sub{font-size:11px;color:var(--muted);margin-top:2px}.zone-progress{width:105px}.zone-count{font-size:10px;color:var(--muted);text-align:right;margin-bottom:6px}.chev{color:#718099;transition:transform .2s}.zone[open] .chev{transform:rotate(180deg)}.quest-list{padding:0 15px 15px;display:grid;gap:9px}.quest{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:12px;padding:15px;border:1px solid #273247;border-radius:13px;background:rgba(8,11,18,.66);transition:border-color .18s,background .18s}.quest.done{border-color:rgba(196,255,114,.35);background:rgba(196,255,114,.035)}.quest.done .quest-title{text-decoration:line-through;text-decoration-color:#637b4b;color:#9eafbe}.quest-check{appearance:none;width:21px;height:21px;border:1px solid #53617b;border-radius:6px;background:#0b1019;margin:2px 0 0;display:grid;place-items:center;cursor:pointer}.quest-check:checked{border-color:var(--lime);background:var(--lime)}.quest-check:checked:after{content:"✓";font-size:14px;color:#10160a;font-weight:1000}.quest-title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.quest-title{font-size:13px;font-weight:900}.day-tag{font-size:9px;color:var(--cyan);border:1px solid rgba(83,243,237,.24);background:rgba(83,243,237,.06);padding:3px 6px;border-radius:5px;letter-spacing:.5px}.quest-desc{font-size:11px;color:#9eabc0;margin:6px 0 9px;max-width:900px}.deliverable{font-size:11px;color:#d1d9e8;border-left:2px solid var(--purple);padding:4px 0 4px 9px;margin:8px 0}.deliverable b{color:#d0c4ff}.resources{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.resources a{font-size:10px;border:1px solid #303c51;padding:5px 8px;border-radius:7px;background:#131a28;color:#8fe9e7}.resources a:hover{border-color:var(--cyan);text-decoration:none;color:#fff}.quest-meta{display:flex;align-items:flex-start;gap:5px;flex-direction:column}.xp{font-size:10px;color:var(--amber);font-weight:900;white-space:nowrap}.type-pill{font-size:9px;text-transform:uppercase;letter-spacing:.8px;padding:4px 7px;border-radius:5px;background:rgba(156,123,255,.09);color:#c7b8ff;border:1px solid rgba(156,123,255,.18);white-space:nowrap}.type-pill.project{background:rgba(255,79,216,.07);border-color:rgba(255,79,216,.25);color:#ff8ae7}.type-pill.income{background:rgba(196,255,114,.06);border-color:rgba(196,255,114,.2);color:var(--lime)}.hidden{display:none!important}
+.lower-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:15px;margin-top:22px}.panel{border:1px solid var(--line);background:rgba(16,21,33,.88);border-radius:18px;padding:20px;min-width:0}.panel h3{margin:0 0 5px;font-size:16px}.panel .sub{color:var(--muted);font-size:11px;margin-bottom:15px}.project-line{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid #263044}.project-line:last-child{border-bottom:0}.project-number{flex:0 0 31px;height:31px;border-radius:9px;display:grid;place-items:center;background:rgba(255,79,216,.08);border:1px solid rgba(255,79,216,.2);color:var(--pink);font-size:11px;font-weight:900}.project-line b{display:block;font-size:12px}.project-line p{margin:3px 0 0;color:var(--muted);font-size:11px}.rule{display:flex;gap:9px;margin:12px 0;color:#b6c2d4;font-size:11px}.rule i{font-style:normal;color:var(--lime);font-weight:900}.achievement-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.achievement{border:1px solid #2a3548;background:#0d121e;border-radius:10px;padding:11px;opacity:.48}.achievement.unlocked{opacity:1;border-color:rgba(196,255,114,.36);background:rgba(196,255,114,.045)}.achievement .symbol{font-size:18px}.achievement b{display:block;font-size:10px;margin-top:3px}.achievement span{font-size:9px;color:var(--muted)}
+.focusbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid rgba(83,243,237,.21);border-radius:16px;padding:16px 18px;margin-top:16px;background:linear-gradient(100deg,rgba(83,243,237,.06),rgba(156,123,255,.05))}.focus-left{display:flex;align-items:center;gap:12px}.focus-glyph{height:42px;width:42px;display:grid;place-items:center;font-size:21px;color:var(--cyan);border:1px solid rgba(83,243,237,.36);border-radius:12px}.focus-label{font-size:12px;font-weight:900}.focus-sub{font-size:10px;color:var(--muted)}.timer{font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;letter-spacing:1px}.timer-actions{display:flex;gap:7px}.timer-actions button{padding:8px 11px;font-size:10px}
+footer{display:flex;justify-content:space-between;gap:16px;align-items:center;border-top:1px solid var(--line);margin-top:34px;padding-top:18px;color:#687790;font-size:10px}.footer-right{display:flex;gap:8px;flex-wrap:wrap}.footer-right button{background:transparent;border:0;color:#8d9ab1;font-size:10px;text-decoration:underline}
+.toast{position:fixed;bottom:18px;right:18px;max-width:min(340px,calc(100vw - 36px));padding:13px 16px;background:#182231;border:1px solid var(--cyan);color:var(--text);border-radius:12px;box-shadow:var(--shadow);font-size:12px;z-index:100;opacity:0;transform:translateY(15px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:1050px){.shell{grid-template-columns:205px minmax(0,1fr)}aside{padding:20px 13px}.hero{grid-template-columns:minmax(0,1fr) 220px}.hero-art{min-height:185px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.lower-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.shell{display:block}aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{margin:0}.brand-mark{width:33px;height:33px}.nav-label,.side-progress,.side-foot{display:none}.side-nav{display:flex;gap:4px;overflow:auto}.navlink{padding:8px;font-size:0;flex:0 0 auto}.navicon{font-size:17px;width:auto}.hero{grid-template-columns:1fr;padding:24px}.hero-art{display:none}h1{font-size:37px}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:24px}.section-head{align-items:start;flex-direction:column}.zone summary{grid-template-columns:40px minmax(0,1fr) 18px;padding:14px;gap:10px}.zone-progress{display:none}.zone-num{width:38px;height:38px}.quest-list{padding:0 8px 8px}.quest{grid-template-columns:24px minmax(0,1fr);padding:12px;gap:9px}.quest-meta{grid-column:2;flex-direction:row;align-items:center}.topbar{align-items:flex-start}.crumb{max-width:230px}.status-pill{font-size:0;padding:9px}.status-pill .dot{margin:0}.achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}footer{align-items:flex-start;flex-direction:column}}
+code{background:#0d121e;border:1px solid #2a3548;border-radius:5px;padding:1px 5px;font-size:11px;color:#d0c4ff}.rule a{color:var(--cyan)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<main>
-  <section class="hero">
-    <div class="kicker">CYBER//QUEST // NEON CAMPAIGN</div>
-    <h1><span class="glitch" data-text="90-DAY AUTOMATION GRIND">90-DAY AUTOMATION GRIND</span></h1>
-    <p class="sub">Income skill muna, PRTO tuloy. Every day has a mission: <b>learn → build → break → fix → document → level up.</b> Treat the plan like a game, Future Me like the client, and deadlines like game timers.</p>
-    <div class="badges">
-      <span class="badge hot">🎮 GAME MODE: ON</span>
-      <span class="badge pink">⚡ PARKINSON BREAKER</span>
-      <span class="badge lime">❓ WHY × WHY × WHY</span>
-      <span class="badge">🧠 MAX USEFUL PROGRESS</span>
-      <button class="badge" id="mute">🔊 SFX ON</button>
+<div class="shell">
+  <aside>
+    <div class="brand"><div class="brand-mark">N//</div><div><div class="brand-title">NEON//OPS</div><div class="brand-sub">Automation Division</div></div></div>
+    <div class="side-nav">
+      <div class="nav-label">CAMPAIGN</div>
+      <a class="navlink active" href="#top"><span class="navicon">◈</span>Dashboard</a>
+      <a class="navlink" href="#start"><span class="navicon">▶</span>Start here</a>
+      <a class="navlink" href="#roadmap"><span class="navicon">⌘</span>Quest map</a>
+      <a class="navlink" href="#projects"><span class="navicon">▣</span>Projects</a>
+      <a class="navlink" href="#agency"><span class="navicon">⚑</span>Agency path</a>
+      <a class="navlink" href="#rules"><span class="navicon">✦</span>Rules</a>
+      <a class="navlink" href="#achievements"><span class="navicon">♜</span>Achievements</a>
     </div>
-  </section>
-
-  <section class="hud">
-    <div class="stat"><div class="label">Campaign</div><div class="value neon" id="dayCount">0 / 90</div><div class="tiny">days cleared</div></div>
-    <div class="stat"><div class="label">XP</div><div class="value limetxt" id="xp">0</div><div class="tiny">earned this run</div></div>
-    <div class="stat"><div class="label">Level</div><div class="value pinktxt" id="level">1</div><div class="tiny">operative level</div></div>
-    <div class="stat"><div class="label">Rank</div><div class="value" id="rank">ROOKIE OPERATIVE</div><div class="tiny">current class</div></div>
-    <div class="stat"><div class="label">Streak</div><div class="value neon" id="streak">0</div><div class="tiny">day streak 🔥</div></div>
-    <div class="stat"><div class="label">Bosses</div><div class="value" id="bosses">0</div><div class="tiny">boss fights defeated</div></div>
-  </section>
-
-  <section class="panel">
-    <div class="level-row"><strong id="progressText">0 / 90 DAYS CLEARED · 0%</strong><span>Campaign XP meter</span></div>
-    <div class="progress-wrap"><div class="track big"><i id="pb"></i></div></div>
-    <div class="level-row" style="margin-top:12px"><strong id="lvlText">LV 1 → 2</strong><span id="lvlXp">0 / 500 XP</span></div>
-    <div class="progress-wrap"><div class="track"><i id="lb"></i></div></div>
-  </section>
-
-  <section class="contract-grid">
-    <div class="panel contract">
-      <div class="eyebrow" id="contractDay">DAY 1</div>
-      <h3 id="contractTitle">Loading quest…</h3>
-      <p id="contractDesc"></p>
-      <div class="meta">
-        <span class="chip" id="contractXP">+100 XP</span>
-        <span class="chip" id="contractBoss">STANDARD QUEST</span>
-        <span class="chip">CLIENT: FUTURE ME</span>
+    <div class="side-progress"><div class="side-progress-head"><span>CAMPAIGN STATUS</span><b id="sidePercent">0%</b></div><div class="meter"><div class="meter-fill" id="sideMeter"></div></div><div style="font-size:10px;color:#71819b;margin-top:9px" id="sideCount">0 / 35 missions cleared</div></div>
+    <div class="side-foot">LOCAL SAVE: ON<br>BUILD PROOF. NOT JUST NOTES.<br>NEVER COMMIT SECRETS.</div>
+  </aside>
+  <main id="top">
+    <div class="topbar"><div class="crumb"><b>NEON CITY</b> / OPERATIVE PROGRAM / PYTHON AI</div><div class="top-actions"><div class="status-pill"><span class="dot"></span> SYSTEM READY</div></div></div>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">60-DAY ESSENTIAL CAMPAIGN</div>
+        <h1>Python AI<br><span class="accent">Automation</span><br>& Integration</h1>
+        <p>A focused mission path to build practical automations: Python → APIs → data → LLMs → n8n workflows → reliable delivery. No unrelated specialization detours. Every quest ends with something you can run, explain, or show.</p>
+        <div class="hero-buttons"><button class="btn btn-primary" id="continueBtn">▶ CONTINUE MISSION</button><a class="btn btn-quiet" href="#roadmap">VIEW QUEST MAP ↘</a><button class="btn btn-quiet" id="exportBtn">EXPORT SAVE ↓</button></div>
       </div>
-      <div class="quest-controls">
-        <button class="primary" id="markCurrent">✓ Mark Current Quest Clear</button>
-        <button class="pink" id="compress">⚡ Compression Mode</button>
-        <button class="warn" id="clearAll">↺ Reset Run</button>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>⏱ FOCUS SPRINT</h2>
-      <p>One mission. One output. 90-minute cap. Finish early = XP bonus feeling, not permission to add another 20 tasks.</p>
-      <div class="timer" id="timerBox">
-        <div>
-          <div class="time" id="timerText">90:00</div>
-          <div class="state" id="timerState">FOCUS // ARMED</div>
-          <div class="track" style="width:min(260px,60vw);margin-top:8px"><i id="tpb"></i></div>
-        </div>
-        <div class="quest-controls">
-          <button class="primary" id="timerBtn">Start / Pause</button>
-          <button id="resetTimer">Reset</button>
+      <div class="hero-art" aria-label="Original cyberpunk-inspired operator illustration">
+        <div class="art-frame"><span class="corner tl"></span><span class="corner br"></span>
+          <svg viewBox="0 0 310 290" role="img" aria-label="Abstract neon cyberpunk operator portrait" width="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="hair" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#53f3ed"/><stop offset=".48" stop-color="#7766ff"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient><linearGradient id="coat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1b3346"/><stop offset="1" stop-color="#291737"/></linearGradient></defs>
+            <g opacity=".22" stroke="#53f3ed" stroke-width=".7"><path d="M0 30H310M0 60H310M0 90H310M0 120H310M0 150H310M0 180H310M0 210H310M0 240H310M0 270H310"/><path d="M30 0V290M60 0V290M90 0V290M120 0V290M150 0V290M180 0V290M210 0V290M240 0V290M270 0V290"/></g>
+            <circle cx="157" cy="115" r="81" fill="none" stroke="#ff4fd8" opacity=".3"/><circle cx="157" cy="115" r="68" fill="none" stroke="#53f3ed" opacity=".45" stroke-dasharray="3 7"/>
+            <path d="M62 279L84 214L115 194L197 194L229 215L250 279Z" fill="url(#coat)" stroke="#53f3ed" stroke-width="1.4"/>
+            <path d="M116 194L154 235L197 194L183 279H130Z" fill="#0e1522" stroke="#8d7aff" stroke-width="1.2"/>
+            <path d="M135 176L134 205L155 226L180 201L177 174Z" fill="#ba7d87" stroke="#53f3ed" stroke-width="1"/>
+            <path d="M103 93Q101 43 151 40Q204 39 211 92L202 151Q192 179 157 184Q123 177 111 151Z" fill="#d79aa2" stroke="#ff91df" stroke-width="1.2"/>
+            <path d="M100 113Q82 64 117 38L148 25L193 37Q224 64 211 115L199 96L191 69L160 83L128 72L113 105Z" fill="url(#hair)" stroke="#53f3ed" stroke-width="1.4"/>
+            <path d="M111 88L91 131L107 155L118 132M199 85L220 122L207 154L196 130" fill="#151b2d" stroke="#ff4fd8" stroke-width="1.8"/>
+            <path d="M117 112L143 112L137 124L118 122Z" fill="#101a28" stroke="#53f3ed" stroke-width="1.2"/><path d="M168 112L194 109L191 121L173 124Z" fill="#101a28" stroke="#53f3ed" stroke-width="1.2"/>
+            <path d="M144 151Q157 158 172 150" fill="none" stroke="#753f60" stroke-width="2"/><path d="M155 128L151 144L160 145" fill="none" stroke="#9f6578" stroke-width="1.4"/>
+            <path d="M83 225L121 214L139 279M224 225L190 214L174 279" fill="none" stroke="#53f3ed" stroke-width="1.5"/><path d="M112 237H132M180 237H201" stroke="#ff4fd8" stroke-width="2"/><path d="M74 262H108M201 262H235" stroke="#9c7bff" stroke-width="2"/>
+            <rect x="20" y="15" width="43" height="14" rx="2" fill="#0f1d2a" stroke="#53f3ed"/><text x="41" y="25" font-size="6.5" fill="#53f3ed" text-anchor="middle" font-weight="700">SYS // 01</text><rect x="224" y="248" width="62" height="18" rx="2" fill="#171128" stroke="#ff4fd8"/><text x="255" y="260" font-size="7" fill="#ff8be9" text-anchor="middle" font-weight="700">AI INTEGRATOR</text>
+          </svg><div class="art-label">Build / Integrate / Ship</div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+    <section class="stats" aria-label="Campaign statistics">
+      <div class="stat"><div class="stat-top"><span>Missions cleared</span><span class="stat-icon">◈</span></div><div class="stat-value" id="missionsValue">0/35</div><div class="stat-foot">One completed deliverable at a time</div></div>
+      <div class="stat"><div class="stat-top"><span>XP earned</span><span class="stat-icon">✦</span></div><div class="stat-value" id="xpValue">0</div><div class="stat-foot">Earned by shipping, not just reading</div></div>
+      <div class="stat"><div class="stat-top"><span>Operative rank</span><span class="stat-icon">♜</span></div><div class="stat-value rank" id="rankValue">ROOKIE</div><div class="stat-foot" id="rankFoot">First steps start here</div></div>
+      <div class="stat"><div class="stat-top"><span>Portfolio projects</span><span class="stat-icon">▣</span></div><div class="stat-value" id="projectsValue">0/5</div><div class="stat-foot">Proof you can show another person</div></div>
+    </section>
 
-  <section class="panel">
-    <h2>🎮 CHOOSE YOUR RUN MODE</h2>
-    <p id="modeCopy">Future Me is the client. Deliver an output, not just study time.</p>
-    <div class="mode-grid">
-      <button class="mode active" data-mode="CLIENT"><h3>CLIENT MODE</h3><p>Someone is counting on you. Clear the quest and deliver.</p></button>
-      <button class="mode" data-mode="SOLO"><h3>SOLO RUN</h3><p>Focus on mastery, cleaner work, and fewer distractions.</p></button>
-      <button class="mode" data-mode="BOSS"><h3>BOSS MODE</h3><p>Do the hardest meaningful task first. No fake productivity.</p></button>
-    </div>
-  </section>
+    <section id="start">
+      <div class="section-head"><div><div class="section-kicker">00 / Start here</div><h2>DAY 1: YOUR FIRST 90 MINUTES</h2></div><p class="section-desc">Don't plan more. Do these four steps in order, then tick Mission 01 below. Small win first.</p></div>
+      <div class="panel">
+        <div class="rule"><i>01</i><span><b>Install Python</b> from the official site: <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads ↗</a>. During install, tick "Add Python to PATH" if you are on Windows.</span></div>
+        <div class="rule"><i>02</i><span><b>Set up VS Code and run your first file.</b> Follow <a href="https://code.visualstudio.com/docs/python/python-tutorial" target="_blank" rel="noopener">Getting Started with Python in VS Code ↗</a> until <code>hello.py</code> prints something.</span></div>
+        <div class="rule"><i>03</i><span><b>Make a virtual environment and install one package.</b> Follow <a href="https://docs.python.org/3/tutorial/venv.html" target="_blank" rel="noopener">Virtual Environments and Packages ↗</a>, then run <code>pip install requests</code> inside it.</span></div>
+        <div class="rule"><i>04</i><span><b>Tick Mission 01</b> below, press <b>CONTINUE MISSION</b>, and do one 25-minute focus sprint on Mission 03 (CS50P Week 0). That's Day 1 done.</span></div>
+        <div class="sub" style="margin:14px 0 0">Daily minimum: one focus sprint and one small output. Stuck for more than 20 minutes? Write down the exact error, then ask for help.</div>
+      </div>
+    </section>
 
-  <section class="panel">
-    <h2>🔋 ENERGY SYSTEM</h2>
-    <p>Pick your current state. The rule is adaptability, not self-punishment.</p>
-    <div class="mode-grid">
-      <button class="mode" data-energy="LOW"><h3>LOW HP</h3><p>Minimum viable quest: 25–45 min focused work + recovery.</p></button>
-      <button class="mode active" data-energy="OK"><h3>STABLE</h3><p>Normal quest: 60–90 min focused sprint, then move or rest.</p></button>
-      <button class="mode" data-energy="HIGH"><h3>OVERDRIVE</h3><p>Use extra energy for quality or shipping—not for deleting sleep.</p></button>
-    </div>
-  </section>
+    <section id="roadmap">
+      <div class="section-head"><div><div class="section-kicker">01 / Main questline</div><h2>THE ESSENTIALS ONLY</h2></div><p class="section-desc">60 days is a target, not a mastery guarantee. Move faster where you can, repeat weak topics where you must. Unlock knowledge by building and testing. In each mission, do the first LESSON link first. The rest are backups and reference.</p></div>
+      <div class="toolrow"><div class="searchbox"><input id="searchInput" type="search" placeholder="Search Python, APIs, LLM, webhooks..." aria-label="Search missions"></div><button class="filter-btn active" data-filter="all">ALL MISSIONS</button><button class="filter-btn" data-filter="core">CORE ONLY</button><button class="filter-btn" data-filter="project">PROJECTS</button><button class="filter-btn" data-filter="income">INCOME ACTIONS</button></div>
+      <div id="zones">
+        <details class="zone" open data-zone="00"><summary><div class="zone-num">00</div><div><div class="zone-name">BOOT SEQUENCE</div><div class="zone-sub">Days 1–2 · environment, terminal, GitHub</div></div><div class="zone-progress"><div class="zone-count">0 / 2</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q01" data-xp="80" data-kind="core" data-search="python install editor terminal run script virtual environment venv setup"><input class="quest-check" type="checkbox" aria-label="Complete mission: Runtime setup"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Runtime + workspace setup</span><span class="day-tag">DAY 1</span></div><p class="quest-desc">Set up Python, your editor, terminal, and a project folder. Know how to run a .py file and create/activate a virtual environment. Don't lose hours customizing tools.</p><div class="deliverable"><b>CLEAR CONDITION:</b> run a script and install one package inside a virtual environment.</div><div class="resources"><a href="https://code.visualstudio.com/docs/python/python-tutorial" target="_blank" rel="noopener">LESSON · Python in VS Code: setup + run a file ↗</a><a href="https://docs.python.org/3/tutorial/venv.html" target="_blank" rel="noopener">LESSON · Virtual environments + pip (official tutorial) ↗</a></div></div><div class="quest-meta"><span class="xp">+80 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q02" data-xp="100" data-kind="core" data-search="git github commits readme gitignore portfolio version control"><input class="quest-check" type="checkbox" aria-label="Complete mission: GitHub basics"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">GitHub proof-of-work basics</span><span class="day-tag">DAY 2</span></div><p class="quest-desc">Learn status, add, commit, push, README, and .gitignore. Use Git to save project history. Never upload API keys, passwords, or client data.</p><div class="deliverable"><b>CLEAR CONDITION:</b> push your first small Python repo with a clear README and clean .gitignore.</div><div class="resources"><a href="https://github.com/skills/introduction-to-github" target="_blank" rel="noopener">LESSON · GitHub Skills: Introduction to GitHub (hands-on) ↗</a><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository" target="_blank" rel="noopener">LESSON · Git: status / add / commit ↗</a><a href="https://docs.github.com/en/get-started/git-basics/ignoring-files" target="_blank" rel="noopener">DOCS · .gitignore (keep secrets out) ↗</a><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes" target="_blank" rel="noopener">DOCS · Writing a README ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+        </div></details>
 
-  <section class="panel">
-    <h2>❓ THE WHY ENGINE</h2>
-    <p>When the brain says “mamaya na,” don't debate forever. Drill into the real blocker and choose one concrete next action.</p>
-    <div class="why">
-      <textarea placeholder="WHY #1 — Ano ang tunay na dahilan kung bakit ka hindi gumagalaw?"></textarea>
-      <textarea placeholder="WHY #2 — Bakit pa? Drill deeper until actionable."></textarea>
-    </div>
-    <div class="quest-controls">
-      <button id="why5" class="primary">Run WHY Engine</button>
-    </div>
-  </section>
+        <details class="zone" data-zone="01"><summary><div class="zone-num">01</div><div><div class="zone-name">PYTHON CORE</div><div class="zone-sub">Days 3–10 · logic and code you can explain</div></div><div class="zone-progress"><div class="zone-count">0 / 5</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q03" data-xp="100" data-kind="core" data-search="variables strings numbers booleans input output if elif else conditions"><input class="quest-check" type="checkbox" aria-label="Complete mission: Variables and conditions"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Values, input, and conditions</span><span class="day-tag">DAYS 3–4</span></div><p class="quest-desc">Variables, strings, numbers, booleans, input/output, comparisons, if/elif/else. Practice validation logic, not memorizing definitions.</p><div class="deliverable"><b>CLEAR CONDITION:</b> build an input validator that rejects bad input and gives useful feedback.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/0/" target="_blank" rel="noopener">LESSON · CS50P Lecture 0: variables + input ↗</a><a href="https://cs50.harvard.edu/python/notes/1/" target="_blank" rel="noopener">LESSON · CS50P Lecture 1: conditionals ↗</a><a href="https://automatetheboringstuff.com/3e/chapter2.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.2: if/else + flow control ↗</a><a href="https://docs.python.org/3/tutorial/controlflow.html#if-statements" target="_blank" rel="noopener">DOCS · if / elif / else ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q04" data-xp="100" data-kind="core" data-search="for while loops list tuple set dictionary dict collections data structures"><input class="quest-check" type="checkbox" aria-label="Complete mission: Loops and collections"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Loops + collections</span><span class="day-tag">DAYS 5–6</span></div><p class="quest-desc">for/while, range, lists, dictionaries, sets, and safe lookups. These power almost every data-processing automation.</p><div class="deliverable"><b>CLEAR CONDITION:</b> take sample records, filter valid items, count categories, and produce a summary.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/2/" target="_blank" rel="noopener">LESSON · CS50P Lecture 2: loops ↗</a><a href="https://automatetheboringstuff.com/3e/chapter3.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.3: loops ↗</a><a href="https://automatetheboringstuff.com/3e/chapter7.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.7: dictionaries ↗</a><a href="https://docs.python.org/3/tutorial/datastructures.html#sets" target="_blank" rel="noopener">DOCS · Sets + looping techniques ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q05" data-xp="100" data-kind="core" data-search="functions parameters return imports modules reusable code"><input class="quest-check" type="checkbox" aria-label="Complete mission: Functions and modules"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Functions + reusable modules</span><span class="day-tag">DAY 7</span></div><p class="quest-desc">Function parameters, return values, basic scope, imports, and splitting code into small pieces. Classes/OOP deep dives can wait.</p><div class="deliverable"><b>CLEAR CONDITION:</b> refactor a messy script into 3–5 named functions with clear jobs.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/0/" target="_blank" rel="noopener">LESSON · CS50P Lecture 0: functions ↗</a><a href="https://automatetheboringstuff.com/3e/chapter4.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.4: functions ↗</a><a href="https://docs.python.org/3/tutorial/controlflow.html#defining-functions" target="_blank" rel="noopener">DOCS · Defining functions ↗</a><a href="https://docs.python.org/3/tutorial/modules.html" target="_blank" rel="noopener">DOCS · Modules + imports ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q06" data-xp="100" data-kind="core" data-search="exceptions errors debugging try except files pathlib read write"><input class="quest-check" type="checkbox" aria-label="Complete mission: Debugging"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Files, exceptions + debugging</span><span class="day-tag">DAYS 8–9</span></div><p class="quest-desc">Understand tracebacks, try/except, pathlib, reading/writing text files, and how to isolate a bug. Don't hide all errors with a broad except.</p><div class="deliverable"><b>CLEAR CONDITION:</b> create a file organizer in a test folder, handle missing files, and explain one traceback you fixed.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/3/" target="_blank" rel="noopener">LESSON · CS50P Lecture 3: exceptions ↗</a><a href="https://cs50.harvard.edu/python/notes/6/" target="_blank" rel="noopener">LESSON · CS50P Lecture 6: file I/O ↗</a><a href="https://automatetheboringstuff.com/3e/chapter5.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.5: debugging ↗</a><a href="https://automatetheboringstuff.com/3e/chapter11.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.11: organizing files ↗</a><a href="https://docs.python.org/3/library/pathlib.html" target="_blank" rel="noopener">DOCS · pathlib ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q07" data-xp="180" data-kind="project core" data-search="project mini python cli CSV JSON skill check"><input class="quest-check" type="checkbox" aria-label="Complete mission: Python mini project"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Mini-boss: command-line utility</span><span class="day-tag">DAY 10</span></div><p class="quest-desc">Combine input, conditions, loops, functions, files, and errors. Don't copy an entire solution; use docs when you need a reminder.</p><div class="deliverable"><b>CLEAR CONDITION:</b> another person can run your script by following the README and test at least 3 input cases.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/4/" target="_blank" rel="noopener">LESSON · CS50P Lecture 4: libraries (sys.argv) ↗</a><a href="https://automatetheboringstuff.com/3e/chapter12.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.12: command-line programs ↗</a><a href="https://docs.python.org/3/howto/argparse.html" target="_blank" rel="noopener">LESSON · argparse tutorial ↗</a></div></div><div class="quest-meta"><span class="xp">+180 XP</span><span class="type-pill project">PROJECT</span></div></article>
+        </div></details>
 
-  <section class="panel">
-    <h2>🏆 ACHIEVEMENTS <span class="muted" id="achCount"></span></h2>
-    <div class="ach-grid" id="ach"></div>
-  </section>
+        <details class="zone" data-zone="02"><summary><div class="zone-num">02</div><div><div class="zone-name">DATA AUTOMATION</div><div class="zone-sub">Days 11–17 · turn messy files into useful outputs</div></div><div class="zone-progress"><div class="zone-count">0 / 4</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q08" data-xp="100" data-kind="core" data-search="CSV JSON read write DictReader DictWriter data formats"><input class="quest-check" type="checkbox" aria-label="Complete mission: CSV JSON"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">CSV + JSON data formats</span><span class="day-tag">DAYS 11–12</span></div><p class="quest-desc">Read and write CSV safely, parse/serialize JSON, work with rows and dictionaries, and handle missing or malformed values.</p><div class="deliverable"><b>CLEAR CONDITION:</b> convert CSV → JSON → CSV without silently losing fields.</div><div class="resources"><a href="https://automatetheboringstuff.com/3e/chapter18.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.18: CSV, JSON, XML ↗</a><a href="https://cs50.harvard.edu/python/notes/6/" target="_blank" rel="noopener">LESSON · CS50P Lecture 6: file I/O + CSV ↗</a><a href="https://docs.python.org/3/library/csv.html#csv.DictReader" target="_blank" rel="noopener">DOCS · csv.DictReader ↗</a><a href="https://docs.python.org/3/library/csv.html#csv.DictWriter" target="_blank" rel="noopener">DOCS · csv.DictWriter ↗</a><a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noopener">DOCS · json module ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q09" data-xp="100" data-kind="core" data-search="validation normalization deduplication standardize data clean"><input class="quest-check" type="checkbox" aria-label="Complete mission: Data validation"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Validation, normalization + deduplication</span><span class="day-tag">DAYS 13–14</span></div><p class="quest-desc">Define valid values, normalize consistent formats, detect duplicates, separate rejected rows, and report what changed.</p><div class="deliverable"><b>CLEAR CONDITION:</b> your script outputs cleaned data plus a rejected-records report and summary counts.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/7/" target="_blank" rel="noopener">LESSON · CS50P Lecture 7: regex (use the 'Cleaning Up User Input' part for normalizing formats) ↗</a><a href="https://automatetheboringstuff.com/3e/chapter8.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.8: strings (strip, lower, replace) ↗</a><a href="https://docs.python.org/3/tutorial/datastructures.html#sets" target="_blank" rel="noopener">DOCS · Sets for deduplication ↗</a><a href="https://docs.python.org/3/howto/logging.html" target="_blank" rel="noopener">LESSON · Logging HOWTO (rejected-records report) ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q10" data-xp="180" data-kind="project core" data-search="project 1 business data cleaner csv json client portfolio"><input class="quest-check" type="checkbox" aria-label="Complete mission: Business data cleaner"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">PROJECT 01 — Business Data Cleaner</span><span class="day-tag">DAYS 15–16</span></div><p class="quest-desc">Build a reusable tool for synthetic sample data: validate → clean → dedupe → export CSV/JSON → summary report. Use test files, not real private customer records.</p><div class="deliverable"><b>CLEAR CONDITION:</b> tested on 3 sample datasets; includes before/after examples, usage instructions, and limitations.</div><div class="resources"><a href="https://automatetheboringstuff.com/3e/chapter18.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.18: CSV, JSON, XML ↗</a><a href="https://docs.python.org/3/library/csv.html#csv.DictReader" target="_blank" rel="noopener">DOCS · csv.DictReader ↗</a><a href="https://docs.python.org/3/library/csv.html#csv.DictWriter" target="_blank" rel="noopener">DOCS · csv.DictWriter ↗</a><a href="https://docs.python.org/3/howto/logging.html" target="_blank" rel="noopener">LESSON · Logging HOWTO ↗</a></div></div><div class="quest-meta"><span class="xp">+180 XP</span><span class="type-pill project">PROJECT</span></div></article>
+          <article class="quest" data-id="q11" data-xp="100" data-kind="core" data-search="argparse command line interface logs configuration environment variables"><input class="quest-check" type="checkbox" aria-label="Complete mission: CLI and logging"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">CLI, configuration + useful logs</span><span class="day-tag">DAY 17</span></div><p class="quest-desc">Pass input/output paths as arguments, choose log levels, and keep settings separate from code. Use environment variables for credentials.</p><div class="deliverable"><b>CLEAR CONDITION:</b> run your cleaner with --input and --output, and see a useful log when a file is missing.</div><div class="resources"><a href="https://docs.python.org/3/howto/argparse.html" target="_blank" rel="noopener">LESSON · argparse tutorial (--input / --output) ↗</a><a href="https://automatetheboringstuff.com/3e/chapter12.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.12: command-line programs ↗</a><a href="https://docs.python.org/3/howto/logging.html" target="_blank" rel="noopener">LESSON · Logging HOWTO ↗</a><a href="https://docs.python.org/3/library/os.html#os.environ" target="_blank" rel="noopener">DOCS · os.environ (settings + secrets) ↗</a><a href="https://12factor.net/config" target="_blank" rel="noopener">LESSON · Config in the environment ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+        </div></details>
 
-  <div class="scanline"></div>
-  <div id="root"></div>
+        <details class="zone" data-zone="03"><summary><div class="zone-num">03</div><div><div class="zone-name">API INTEGRATION CORE</div><div class="zone-sub">Days 18–28 · connect Python to real services</div></div><div class="zone-progress"><div class="zone-count">0 / 6</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q12" data-xp="100" data-kind="core" data-search="HTTP request response url headers methods GET POST status codes API"><input class="quest-check" type="checkbox" aria-label="Complete mission: HTTP essentials"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">HTTP + API mental model</span><span class="day-tag">DAY 18</span></div><p class="quest-desc">Learn request/response, URL, headers, GET vs POST, status codes, JSON bodies, and the idea of authentication. No deep networking course required.</p><div class="deliverable"><b>CLEAR CONDITION:</b> explain what your client sends and what the API returns; recognize a success vs client/server error.</div><div class="resources"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview" target="_blank" rel="noopener">LESSON · Overview of HTTP (MDN) ↗</a><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods" target="_blank" rel="noopener">LESSON · GET vs POST: HTTP methods ↗</a><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status" target="_blank" rel="noopener">DOCS · Status codes (200 / 4xx / 5xx) ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q13" data-xp="100" data-kind="core" data-search="requests library GET POST params headers response raise_for_status timeout"><input class="quest-check" type="checkbox" aria-label="Complete mission: Python requests"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Python requests: GET + POST</span><span class="day-tag">DAYS 19–20</span></div><p class="quest-desc">Use requests, query parameters, headers, JSON payloads, response status, and response.json(). Learn by calling a public practice API.</p><div class="deliverable"><b>CLEAR CONDITION:</b> make a GET request, send one safe test POST, handle HTTP errors, and show a readable result.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/4/" target="_blank" rel="noopener">LESSON · CS50P Lecture 4: APIs (requests + JSON) ↗</a><a href="https://requests.readthedocs.io/en/latest/user/quickstart/#passing-parameters-in-urls" target="_blank" rel="noopener">LESSON · requests quickstart: query parameters ↗</a><a href="https://requests.readthedocs.io/en/latest/user/quickstart/#json-response-content" target="_blank" rel="noopener">LESSON · requests quickstart: response.json() ↗</a><a href="https://jsonplaceholder.typicode.com/guide/" target="_blank" rel="noopener">LESSON · JSONPlaceholder: free practice API ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q14" data-xp="100" data-kind="core" data-search="API authentication API key secrets environment variables .env GitHub security"><input class="quest-check" type="checkbox" aria-label="Complete mission: API keys"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Credentials + secret handling</span><span class="day-tag">DAY 21</span></div><p class="quest-desc">Understand API keys and basic auth patterns; read secrets from environment variables or an untracked .env file. Keep keys out of code, screenshots, and public repos.</p><div class="deliverable"><b>CLEAR CONDITION:</b> project runs when a key is provided through the environment and fails safely when it is missing.</div><div class="resources"><a href="https://12factor.net/config" target="_blank" rel="noopener">LESSON · Config in the environment ↗</a><a href="https://pypi.org/project/python-dotenv/" target="_blank" rel="noopener">LESSON · python-dotenv (.env files) ↗</a><a href="https://docs.python.org/3/library/os.html#os.environ" target="_blank" rel="noopener">DOCS · os.environ ↗</a><a href="https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety" target="_blank" rel="noopener">LESSON · API key safety ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q15" data-xp="100" data-kind="core" data-search="JSON parsing pagination rate limiting timeouts retries backoff robust API"><input class="quest-check" type="checkbox" aria-label="Complete mission: Robust API calls"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Reliable API calls</span><span class="day-tag">DAYS 22–23</span></div><p class="quest-desc">Handle timeouts, pagination, rate limits, retries with sensible backoff, missing fields, and malformed responses. Don't retry every error forever.</p><div class="deliverable"><b>CLEAR CONDITION:</b> your API client fails with a clear message instead of freezing or silently producing wrong data.</div><div class="resources"><a href="https://requests.readthedocs.io/en/latest/user/quickstart/#timeouts" target="_blank" rel="noopener">LESSON · requests: timeouts ↗</a><a href="https://requests.readthedocs.io/en/latest/user/quickstart/#errors-and-exceptions" target="_blank" rel="noopener">LESSON · requests: errors + exceptions ↗</a><a href="https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html#urllib3.util.Retry" target="_blank" rel="noopener">DOCS · Retry with backoff (urllib3 Retry) ↗</a><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status" target="_blank" rel="noopener">DOCS · HTTP status codes ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q16" data-xp="180" data-kind="project core income" data-search="project API to CSV exporter data sync report applications freelance"><input class="quest-check" type="checkbox" aria-label="Complete mission: API integration project"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">PROJECT 02 — API → clean data → report</span><span class="day-tag">DAYS 24–26</span></div><p class="quest-desc">Fetch API data, validate fields, clean it, export CSV/JSON, and produce a summary. Use a public/test API or synthetic fixtures; document rate limits and failure behavior.</p><div class="deliverable"><b>CLEAR CONDITION:</b> a repeatable tool with configuration, logs, clear errors, example output, and a useful README.</div><div class="resources"><a href="https://requests.readthedocs.io/en/latest/user/quickstart/" target="_blank" rel="noopener">LESSON · requests quickstart ↗</a><a href="https://requests.readthedocs.io/en/latest/user/advanced/" target="_blank" rel="noopener">LESSON · requests Session (reuse connections) ↗</a><a href="https://automatetheboringstuff.com/3e/chapter18.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.18: export CSV/JSON ↗</a><a href="https://jsonplaceholder.typicode.com/guide/" target="_blank" rel="noopener">LESSON · JSONPlaceholder: test API ↗</a></div></div><div class="quest-meta"><span class="xp">+180 XP</span><span class="type-pill project">PROJECT</span><span class="type-pill income">INCOME</span></div></article>
+          <article class="quest" data-id="q17" data-xp="100" data-kind="income core" data-search="applications freelance outreach small task Python automation first income proposals"><input class="quest-check" type="checkbox" aria-label="Complete mission: Start outreach"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">First outreach checkpoint</span><span class="day-tag">DAYS 27–28</span></div><p class="quest-desc">Write a clear service offer around data cleanup or API reporting. Look at current job/project descriptions; apply only where your project demonstrates a relevant skill. Keep learning alongside applications.</p><div class="deliverable"><b>CLEAR CONDITION:</b> send 3–5 tailored, honest applications or outreach messages with a relevant demo. No fake experience and no income guarantees.</div><div class="resources"><a href="https://www.upwork.com/resources/how-to-create-a-proposal-that-wins-jobs" target="_blank" rel="noopener">LESSON · Upwork: how to write a winning proposal ↗</a><a href="https://www.upwork.com/" target="_blank" rel="noopener">DOCS · Upwork: browse job posts ↗</a><a href="https://www.onlinejobs.ph/" target="_blank" rel="noopener">DOCS · OnlineJobs.ph: PH-friendly listings ↗</a><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes" target="_blank" rel="noopener">LESSON · Write the README for your demo ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill income">INCOME</span></div></article>
+        </div></details>
 
-  <section class="panel">
-    <h2>🏁 CAMPAIGN RULES</h2>
-    <p><b>1.</b> Treat it like a game.</p>
-    <p><b>2.</b> Ask how to compress the timeline without sacrificing sleep, health, or quality.</p>
-    <p><b>3.</b> Fight Parkinson’s Law with small, explicit deadlines.</p>
-    <p><b>4.</b> Replace vague study time with a deliverable.</p>
-    <p><b>5.</b> Your superpower is already there: when someone depends on you, you activate. Use <b>CLIENT MODE</b> deliberately.</p>
-  </section>
+        <details class="zone" data-zone="04"><summary><div class="zone-num">04</div><div><div class="zone-name">DATA STORAGE</div><div class="zone-sub">Days 29–33 · enough SQL to build practical flows</div></div><div class="zone-progress"><div class="zone-count">0 / 3</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q18" data-xp="100" data-kind="core" data-search="SQL SELECT WHERE ORDER BY INSERT UPDATE table columns rows fundamentals"><input class="quest-check" type="checkbox" aria-label="Complete mission: SQL basics"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">SQL minimum viable toolkit</span><span class="day-tag">DAYS 29–30</span></div><p class="quest-desc">Learn tables, rows, columns, SELECT, WHERE, ORDER BY, INSERT, UPDATE, basic JOIN, and parameterized queries. Skip database theory rabbit holes.</p><div class="deliverable"><b>CLEAR CONDITION:</b> query, filter, insert, and update sample records without building SQL by unsafe string concatenation.</div><div class="resources"><a href="https://sqlbolt.com/" target="_blank" rel="noopener">LESSON · SQLBolt lessons 1–6: SELECT, WHERE, ORDER BY, JOIN ↗</a><a href="https://sqlbolt.com/lesson/inserting_rows" target="_blank" rel="noopener">LESSON · SQLBolt lesson 13: INSERT ↗</a><a href="https://automatetheboringstuff.com/3e/chapter16.html" target="_blank" rel="noopener">LESSON · Automate the Boring Stuff ch.16: SQLite databases ↗</a><a href="https://sqlite.org/lang_select.html" target="_blank" rel="noopener">DOCS · SQLite SELECT reference ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q19" data-xp="100" data-kind="core" data-search="sqlite3 Python database persistence connection query parameterized execute"><input class="quest-check" type="checkbox" aria-label="Complete mission: SQLite with Python"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">SQLite + Python</span><span class="day-tag">DAY 31</span></div><p class="quest-desc">Connect to SQLite, create a table, insert records, query them, and use parameter placeholders. Know when you need persistence instead of a one-off CSV.</p><div class="deliverable"><b>CLEAR CONDITION:</b> persist API results and re-run the job without duplicating records unexpectedly.</div><div class="resources"><a href="https://www.sqlitetutorial.net/sqlite-python/creating-tables/" target="_blank" rel="noopener">LESSON · SQLite Python: creating tables ↗</a><a href="https://www.sqlitetutorial.net/sqlite-python/insert/" target="_blank" rel="noopener">LESSON · SQLite Python: inserting data ↗</a><a href="https://www.sqlitetutorial.net/sqlite-python/sqlite-python-select/" target="_blank" rel="noopener">LESSON · SQLite Python: querying data ↗</a><a href="https://www.sqlitetutorial.net/sqlite-python/update/" target="_blank" rel="noopener">LESSON · SQLite Python: updating data ↗</a><a href="https://docs.python.org/3/library/sqlite3.html#how-to-use-placeholders-to-bind-values-in-sql-queries" target="_blank" rel="noopener">DOCS · Placeholders (? = no SQL injection) ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q20" data-xp="180" data-kind="project core" data-search="project reporting pipeline sqlite API CSV dashboard report"><input class="quest-check" type="checkbox" aria-label="Complete mission: Reporting pipeline"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">PROJECT 03 — Automated reporting pipeline</span><span class="day-tag">DAYS 32–33</span></div><p class="quest-desc">Connect a source → validate → store in SQLite → aggregate → export a report. Make repeated runs safe and explain the workflow.</p><div class="deliverable"><b>CLEAR CONDITION:</b> a sample report can be regenerated from a clean start using documented commands.</div><div class="resources"><a href="https://www.sqlitetutorial.net/sqlite-python/insert/" target="_blank" rel="noopener">LESSON · SQLite Python: inserting data ↗</a><a href="https://www.sqlitetutorial.net/sqlite-python/sqlite-python-select/" target="_blank" rel="noopener">LESSON · SQLite Python: querying data ↗</a><a href="https://docs.python.org/3/library/sqlite3.html#sqlite3-tutorial" target="_blank" rel="noopener">DOCS · sqlite3 tutorial ↗</a><a href="https://docs.python.org/3/library/csv.html#csv.DictWriter" target="_blank" rel="noopener">DOCS · csv.DictWriter (export the report) ↗</a></div></div><div class="quest-meta"><span class="xp">+180 XP</span><span class="type-pill project">PROJECT</span></div></article>
+        </div></details>
 
-  <footer>
-    Original curriculum preserved from the uploaded 90-day plan. Progress, XP, timer, energy, mode, and notes are stored locally in this browser.
-  </footer>
-</main>
-<div class="toasts" id="toasts"></div>
+        <details class="zone" data-zone="05"><summary><div class="zone-num">05</div><div><div class="zone-name">AI / LLM INTEGRATION</div><div class="zone-sub">Days 34–42 · use models as components, not magic</div></div><div class="zone-progress"><div class="zone-count">0 / 5</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q21" data-xp="100" data-kind="core" data-search="LLM API messages model prompt input output temperature integration"><input class="quest-check" type="checkbox" aria-label="Complete mission: LLM API basics"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">LLM API basics</span><span class="day-tag">DAYS 34–35</span></div><p class="quest-desc">Learn how to send input, receive output, handle authentication, understand model choice, and read provider errors. Use a provider's current official API guide.</p><div class="deliverable"><b>CLEAR CONDITION:</b> call one model from Python and print a result without hardcoding your API key.</div><div class="resources"><a href="https://anthropic.skilljar.com/claude-with-the-anthropic-api" target="_blank" rel="noopener">LESSON · Anthropic course: Building with the Claude API (free) ↗</a><a href="https://developers.openai.com/api/docs/quickstart" target="_blank" rel="noopener">LESSON · OpenAI developer quickstart ↗</a><a href="https://platform.claude.com/docs/en/get-started" target="_blank" rel="noopener">DOCS · Claude API: get started ↗</a><a href="https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety" target="_blank" rel="noopener">LESSON · API key safety ↗</a></div><div class="deliverable" style="border-left-color:var(--amber)"><b>LOW-COST RULE:</b> API calls may be billed separately. Check current pricing and set usage limits before real calls; use mock/sample data first.</div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q22" data-xp="100" data-kind="core" data-search="prompt design instructions JSON structured outputs schema validation predictable response"><input class="quest-check" type="checkbox" aria-label="Complete mission: Structured AI output"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Structured outputs + validation</span><span class="day-tag">DAYS 36–37</span></div><p class="quest-desc">Ask for a known shape (fields and types), parse the result, validate it with a schema, and reject invalid or missing values. Don't trust free-form text as clean data.</p><div class="deliverable"><b>CLEAR CONDITION:</b> turn a short synthetic document into validated JSON that matches a defined schema.</div><div class="resources"><a href="https://www.deeplearning.ai/courses/pydantic-for-llm-workflows" target="_blank" rel="noopener">LESSON · DeepLearning.AI: Pydantic for LLM Workflows (free in beta) ↗</a><a href="https://developers.openai.com/api/docs/guides/structured-outputs" target="_blank" rel="noopener">LESSON · OpenAI structured outputs ↗</a><a href="https://pydantic.dev/docs/validation/latest/concepts/models/" target="_blank" rel="noopener">DOCS · Pydantic models ↗</a><a href="https://pydantic.dev/docs/validation/latest/concepts/validators/" target="_blank" rel="noopener">DOCS · Pydantic validators ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q23" data-xp="100" data-kind="core" data-search="cost latency token usage timeout retries fallback prompt injection validation human review safety"><input class="quest-check" type="checkbox" aria-label="Complete mission: Reliable AI integration"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Reliable + bounded AI calls</span><span class="day-tag">DAYS 38–39</span></div><p class="quest-desc">Track cost/usage and latency; handle timeouts, rate limits, retries, schema failures, and fallback behavior. Treat document text as untrusted input. Require human approval before consequential actions.</p><div class="deliverable"><b>CLEAR CONDITION:</b> test valid, malformed, and unexpected model outputs; the automation fails safely and logs the reason.</div><div class="resources"><a href="https://developers.openai.com/api/docs/guides/rate-limits" target="_blank" rel="noopener">LESSON · OpenAI rate limits ↗</a><a href="https://developers.openai.com/api/docs/guides/error-codes" target="_blank" rel="noopener">LESSON · OpenAI error codes ↗</a><a href="https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html#urllib3.util.Retry" target="_blank" rel="noopener">DOCS · Retry with backoff (urllib3 Retry) ↗</a><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener">LESSON · Prompt injection (OWASP LLM01) ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q24" data-xp="180" data-kind="project core" data-search="project AI document processor classify extract fields JSON validated sample data"><input class="quest-check" type="checkbox" aria-label="Complete mission: AI document processor"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">PROJECT 04 — AI document / lead triage</span><span class="day-tag">DAYS 40–41</span></div><p class="quest-desc">Process synthetic sample text → LLM extraction/classification → schema validation → SQLite/CSV → review report. Keep secrets safe and output reviewable.</p><div class="deliverable"><b>CLEAR CONDITION:</b> demonstrate the full flow, show validation failures, and report where a human review is required.</div><div class="resources"><a href="https://www.deeplearning.ai/courses/pydantic-for-llm-workflows" target="_blank" rel="noopener">LESSON · Pydantic for LLM Workflows: validating LLM responses ↗</a><a href="https://developers.openai.com/api/docs/guides/structured-outputs" target="_blank" rel="noopener">LESSON · OpenAI structured outputs ↗</a><a href="https://www.sqlitetutorial.net/sqlite-python/insert/" target="_blank" rel="noopener">LESSON · SQLite Python: inserting data (store results) ↗</a><a href="https://pydantic.dev/docs/validation/latest/concepts/models/" target="_blank" rel="noopener">DOCS · Pydantic models ↗</a></div></div><div class="quest-meta"><span class="xp">+180 XP</span><span class="type-pill project">PROJECT</span></div></article>
+          <article class="quest" data-id="q25" data-xp="100" data-kind="core" data-search="AI workflow design decide where AI needed vs deterministic code cost consistency"><input class="quest-check" type="checkbox" aria-label="Complete mission: Choose where AI belongs"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">The AI-or-not decision</span><span class="day-tag">DAY 42</span></div><p class="quest-desc">Use ordinary Python for predictable rules and exact calculations. Use LLMs for tasks such as classification or extraction when flexible language understanding adds value.</p><div class="deliverable"><b>CLEAR CONDITION:</b> document which steps are deterministic, which use AI, and how you verify each result.</div><div class="resources"><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">LESSON · Anthropic: Building effective agents (workflows vs agents; start with the simplest solution) ↗</a><a href="https://pydantic.dev/docs/validation/latest/concepts/validators/" target="_blank" rel="noopener">DOCS · Pydantic validators (deterministic checks) ↗</a><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener">LESSON · Prompt injection: why not to trust model output (OWASP) ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+        </div></details>
+
+        <details class="zone" data-zone="06"><summary><div class="zone-num">06</div><div><div class="zone-name">WORKFLOW INTEGRATION</div><div class="zone-sub">Days 43–49 · use one workflow platform well</div></div><div class="zone-progress"><div class="zone-count">0 / 4</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q26" data-xp="100" data-kind="core" data-search="n8n nodes triggers workflow execution data mapping schedule beginner"><input class="quest-check" type="checkbox" aria-label="Complete mission: n8n essentials"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">n8n essentials</span><span class="day-tag">DAYS 43–44</span></div><p class="quest-desc">Learn triggers, nodes, connections, executions, mapping/transformation, and one scheduled workflow. Stick to n8n for this track; don't learn five automation platforms at once.</p><div class="deliverable"><b>CLEAR CONDITION:</b> build a small trigger → transform → output workflow and explain every node.</div><div class="resources"><a href="https://learn.n8n.io/courses/course-v1%3An8n%2BN8N101%2B2026H2/about" target="_blank" rel="noopener">LESSON · n8n Academy: Essentials (N8N101) ↗</a><a href="https://docs.n8n.io/build-your-first-workflow" target="_blank" rel="noopener">LESSON · Build your first workflow ↗</a><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/" target="_blank" rel="noopener">DOCS · Schedule Trigger node ↗</a><a href="https://docs.n8n.io/build/understand-workflows/understand-executions" target="_blank" rel="noopener">DOCS · Understand executions ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q27" data-xp="100" data-kind="core" data-search="webhook HTTP Request API authentication credentials n8n connected workflows"><input class="quest-check" type="checkbox" aria-label="Complete mission: Webhooks"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Webhooks + HTTP Request node</span><span class="day-tag">DAYS 45–46</span></div><p class="quest-desc">Receive an event through a webhook, call a test API, map the returned JSON, and store credentials safely. Understand what causes a workflow to run.</p><div class="deliverable"><b>CLEAR CONDITION:</b> a test webhook produces a predictable, validated output without exposing credentials.</div><div class="resources"><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/" target="_blank" rel="noopener">DOCS · Webhook node ↗</a><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/" target="_blank" rel="noopener">DOCS · HTTP Request node ↗</a><a href="https://docs.n8n.io/build/understand-workflows/create-and-edit-credentials" target="_blank" rel="noopener">DOCS · Create + edit credentials ↗</a><a href="https://learn.n8n.io/courses/course-v1%3An8n%2BN8N102%2B2026H2/about" target="_blank" rel="noopener">LESSON · n8n Academy: APIs & Connected Workflows (N8N102) ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q28" data-xp="100" data-kind="core" data-search="n8n Python integration HTTP endpoint branching errors retries approvals human in loop"><input class="quest-check" type="checkbox" aria-label="Complete mission: n8n and Python integration"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Connect n8n ↔ Python</span><span class="day-tag">DAYS 47–48</span></div><p class="quest-desc">Pass structured data between a workflow and Python, branch on conditions, and handle failed steps. Add human approval before sending messages or changing real records.</p><div class="deliverable"><b>CLEAR CONDITION:</b> workflow can route success/failure and leaves a traceable log or result.</div><div class="resources"><a href="https://learn.n8n.io/courses/course-v1%3An8n%2BN8N102%2B2026H2/about" target="_blank" rel="noopener">LESSON · n8n Academy: APIs & Connected Workflows (N8N102) ↗</a><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.if/" target="_blank" rel="noopener">DOCS · If node (branching) ↗</a><a href="https://docs.n8n.io/build/flow-logic/handle-errors-gracefully" target="_blank" rel="noopener">LESSON · Handle errors gracefully ↗</a><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.errortrigger/" target="_blank" rel="noopener">DOCS · Error Trigger node ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q29" data-xp="180" data-kind="project core" data-search="project business workflow form webhook Python AI SQLite spreadsheet notification n8n"><input class="quest-check" type="checkbox" aria-label="Complete mission: End to end workflow"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">PROJECT 05 — End-to-end AI workflow</span><span class="day-tag">DAY 49</span></div><p class="quest-desc">Build form/test trigger → n8n → Python/data validation → optional LLM step → database/report → notification preview. Use test accounts or synthetic records.</p><div class="deliverable"><b>CLEAR CONDITION:</b> record a short demo and document trigger, data flow, failure handling, cost considerations, and human approval.</div><div class="resources"><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/" target="_blank" rel="noopener">DOCS · Webhook node (trigger) ↗</a><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/" target="_blank" rel="noopener">DOCS · HTTP Request node (call Python/FastAPI) ↗</a><a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.errortrigger/" target="_blank" rel="noopener">DOCS · Error Trigger node ↗</a><a href="https://pydantic.dev/docs/validation/latest/concepts/models/" target="_blank" rel="noopener">DOCS · Pydantic models (validation) ↗</a></div></div><div class="quest-meta"><span class="xp">+180 XP</span><span class="type-pill project">PROJECT</span></div></article>
+        </div></details>
+
+        <details class="zone" data-zone="07"><summary><div class="zone-num">07</div><div><div class="zone-name">MAKE IT RELIABLE</div><div class="zone-sub">Days 50–56 · test, expose, and deliver a small service</div></div><div class="zone-progress"><div class="zone-count">0 / 3</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q30" data-xp="100" data-kind="core" data-search="FastAPI basic API endpoint request response Pydantic webhook Python integration"><input class="quest-check" type="checkbox" aria-label="Complete mission: FastAPI basics"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">FastAPI: one useful endpoint</span><span class="day-tag">DAYS 50–52</span></div><p class="quest-desc">Learn only what you need: define a route, accept a request body, validate fields, return JSON, and run a local endpoint that n8n can call. No full web-development detour.</p><div class="deliverable"><b>CLEAR CONDITION:</b> expose a local /process endpoint that accepts test data and returns a validated result.</div><div class="resources"><a href="https://fastapi.tiangolo.com/tutorial/first-steps/" target="_blank" rel="noopener">LESSON · FastAPI tutorial: first steps ↗</a><a href="https://fastapi.tiangolo.com/tutorial/body/" target="_blank" rel="noopener">LESSON · FastAPI tutorial: request body (POST + validation) ↗</a><a href="https://fastapi.tiangolo.com/tutorial/" target="_blank" rel="noopener">LESSON · FastAPI tutorial: full user guide index ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q31" data-xp="100" data-kind="core" data-search="pytest tests assertions fixtures happy path edge cases logging timeouts error handling"><input class="quest-check" type="checkbox" aria-label="Complete mission: Tests and reliability"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Test the path and the failure path</span><span class="day-tag">DAYS 53–54</span></div><p class="quest-desc">Write focused tests for valid input, invalid input, missing fields, API failures, and duplicate runs. Log useful context without leaking secrets or private data.</p><div class="deliverable"><b>CLEAR CONDITION:</b> at least 8 automated tests pass; README explains how to run them.</div><div class="resources"><a href="https://cs50.harvard.edu/python/notes/5/" target="_blank" rel="noopener">LESSON · CS50P Lecture 5: unit tests (pytest) ↗</a><a href="https://docs.pytest.org/en/stable/getting-started.html" target="_blank" rel="noopener">LESSON · pytest: get started ↗</a><a href="https://docs.pytest.org/en/stable/how-to/assert.html" target="_blank" rel="noopener">DOCS · pytest: assertions ↗</a><a href="https://docs.python.org/3/howto/logging.html" target="_blank" rel="noopener">LESSON · Logging HOWTO ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span></div></article>
+          <article class="quest" data-id="q32" data-xp="100" data-kind="core income" data-search="deployment demo local service deployment environment variables README run steps Docker optional"><input class="quest-check" type="checkbox" aria-label="Complete mission: Ship a demo"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Ship one demo + handoff notes</span><span class="day-tag">DAYS 55–56</span></div><p class="quest-desc">Make the project reproducible on another machine. Deploy it only if a suitable free/low-cost option is available; otherwise make a clear local demo. Document setup, config, limitations, and safe use.</p><div class="deliverable"><b>CLEAR CONDITION:</b> one command sequence launches the demo and another person can follow the README without your help.</div><div class="resources"><a href="https://docs.python.org/3/tutorial/venv.html#managing-packages-with-pip" target="_blank" rel="noopener">LESSON · requirements.txt: pip freeze + install -r (official tutorial) ↗</a><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes" target="_blank" rel="noopener">LESSON · Writing a README ↗</a><a href="https://docs.github.com/en/get-started/git-basics/ignoring-files" target="_blank" rel="noopener">DOCS · .gitignore (no secrets in the repo) ↗</a><a href="https://12factor.net/config" target="_blank" rel="noopener">LESSON · Config in the environment ↗</a></div></div><div class="quest-meta"><span class="xp">+100 XP</span><span class="type-pill">CORE</span><span class="type-pill income">SHIP IT</span></div></article>
+        </div></details>
+
+        <details class="zone" data-zone="08"><summary><div class="zone-num">08</div><div><div class="zone-name">PORTFOLIO + INCOME RUN</div><div class="zone-sub">Days 57–60 · make the skill easy to evaluate</div></div><div class="zone-progress"><div class="zone-count">0 / 3</div><div class="meter"><div class="meter-fill"></div></div></div><span class="chev">⌄</span></summary><div class="quest-list">
+          <article class="quest" data-id="q33" data-xp="120" data-kind="income" data-search="portfolio GitHub project demo README before after architecture limitations screenshots"><input class="quest-check" type="checkbox" aria-label="Complete mission: Portfolio packaging"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Package your proof</span><span class="day-tag">DAY 57</span></div><p class="quest-desc">Pick the 2–3 best projects. Add a simple problem → solution → workflow → demo → testing → limitations page. Use screenshots and synthetic data, not fake claims.</p><div class="deliverable"><b>CLEAR CONDITION:</b> someone can understand the value of each project in under 2 minutes.</div><div class="resources"><a href="https://github.com/skills/communicate-using-markdown" target="_blank" rel="noopener">LESSON · GitHub Skills: Communicate using Markdown ↗</a><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes" target="_blank" rel="noopener">LESSON · Writing a README ↗</a><a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax" target="_blank" rel="noopener">DOCS · Markdown formatting on GitHub ↗</a></div></div><div class="quest-meta"><span class="xp">+120 XP</span><span class="type-pill income">INCOME</span></div></article>
+          <article class="quest" data-id="q34" data-xp="120" data-kind="income" data-search="service offer automation integration prospect outreach tailored applications follow up"><input class="quest-check" type="checkbox" aria-label="Complete mission: Service offer and outreach"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">Define one small, honest service</span><span class="day-tag">DAYS 58–59</span></div><p class="quest-desc">Example: “I clean and validate CSV data” or “I connect an API to a report.” Set a narrow scope, explain what's included, and offer a demo or paid trial. Apply to fitting roles, too.</p><div class="deliverable"><b>CLEAR CONDITION:</b> publish one offer and send 5 tailored messages/applications that link to relevant proof.</div><div class="resources"><a href="https://www.upwork.com/resources/how-to-create-a-proposal-that-wins-jobs" target="_blank" rel="noopener">LESSON · Upwork: how to write a winning proposal ↗</a><a href="https://www.upwork.com/" target="_blank" rel="noopener">DOCS · Upwork ↗</a><a href="https://www.onlinejobs.ph/" target="_blank" rel="noopener">DOCS · OnlineJobs.ph ↗</a></div></div><div class="quest-meta"><span class="xp">+120 XP</span><span class="type-pill income">INCOME</span></div></article>
+          <article class="quest" data-id="q35" data-xp="180" data-kind="project income" data-search="final boss flagship end to end Python AI automation integration deliver demo portfolio review"><input class="quest-check" type="checkbox" aria-label="Complete mission: Final boss"><div class="quest-body"><div class="quest-title-row"><span class="quest-title">FINAL BOSS — live walkthrough</span><span class="day-tag">DAY 60</span></div><p class="quest-desc">Walk through your flagship project: input → validation → Python/API → AI only where useful → output/storage → logs/tests. Explain failure cases and the value delivered.</p><div class="deliverable"><b>CLEAR CONDITION:</b> record a 2–4 minute demo, list what works/doesn't, and continue outreach after Day 60. The campaign ends; learning does not.</div><div class="resources"><a href="https://learn.n8n.io/" target="_blank" rel="noopener">LESSON · n8n Academy (review) ↗</a><a href="https://fastapi.tiangolo.com/tutorial/first-steps/" target="_blank" rel="noopener">LESSON · FastAPI first steps (review) ↗</a><a href="https://pydantic.dev/docs/validation/latest/concepts/models/" target="_blank" rel="noopener">DOCS · Pydantic models (review) ↗</a></div></div><div class="quest-meta"><span class="xp">+180 XP</span><span class="type-pill project">BOSS</span><span class="type-pill income">INCOME</span></div></article>
+        </div></details>
+      </div>
+      <div id="emptyState" class="panel hidden" style="margin-top:12px;color:var(--muted);font-size:12px">No missions match that search. Try a simpler keyword or choose ALL MISSIONS.</div>
+    </section>
+
+    <section id="projects">
+      <div class="section-head"><div><div class="section-kicker">02 / Portfolio arsenal</div><h2>PROJECTS THAT PROVE THE SKILL</h2></div><p class="section-desc">Finish fewer projects well. Each one should run, handle errors, contain a README, and use safe sample data.</p></div>
+      <div class="lower-grid" style="margin-top:0">
+        <div class="panel"><h3>Build order</h3><div class="sub">Your portfolio ladder — five focused projects, each adding a new integration skill.</div>
+          <div class="project-line"><div class="project-number">01</div><div><b>Business Data Cleaner</b><p>CSV/JSON · validation · duplicates · logs · CLI. Proves you can automate repetitive data work.</p></div></div>
+          <div class="project-line"><div class="project-number">02</div><div><b>API → Report Pipeline</b><p>Requests · auth · pagination · retries · file/database output. Proves you can connect software safely.</p></div></div>
+          <div class="project-line"><div class="project-number">03</div><div><b>Automated Reporting Pipeline</b><p>API/source → validation → SQLite → report. Proves you can persist data and run repeatable workflows safely.</p></div></div>
+          <div class="project-line"><div class="project-number">04</div><div><b>AI Document / Lead Triage</b><p>LLM · structured output · Pydantic validation · safe fallbacks. Proves you can use AI without trusting every response.</p></div></div>
+          <div class="project-line"><div class="project-number">05</div><div><b>n8n + Python Flagship</b><p>Webhook/form · n8n · Python/FastAPI · API/LLM · data store · human approval. Proves end-to-end integration.</p></div></div>
+        </div>
+        <div class="panel" id="achievements"><h3>Achievements</h3><div class="sub">Unlock by completing missions. No manual XP farming.</div><div class="achievement-grid">
+          <div class="achievement" data-achievement="first"><div class="symbol">⚡</div><b>BOOTED</b><span>Clear your first mission</span></div>
+          <div class="achievement" data-achievement="five"><div class="symbol">⌘</div><b>IN MOTION</b><span>Clear 5 missions</span></div>
+          <div class="achievement" data-achievement="project"><div class="symbol">▣</div><b>BUILDER</b><span>Clear a project quest</span></div>
+          <div class="achievement" data-achievement="api"><div class="symbol">⇄</div><b>CONNECTOR</b><span>Clear API project</span></div>
+          <div class="achievement" data-achievement="ai"><div class="symbol">◉</div><b>AI HANDLER</b><span>Clear AI project</span></div>
+          <div class="achievement" data-achievement="final"><div class="symbol">♜</div><b>NEON OPERATOR</b><span>Clear the final boss</span></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section id="agency">
+      <div class="section-head"><div><div class="section-kicker">03 / Long-term path</div><h2>FROM SKILL TO AGENCY</h2></div><p class="section-desc">An agency needs clients and a repeatable delivery process, not just skill. Move up a stage only when the gate is met. Nothing here is a guaranteed income.</p></div>
+      <div class="lower-grid" style="margin-top:0">
+        <div class="panel"><h3>Three stages</h3><div class="sub">Each stage builds on the missions above.</div>
+          <div class="project-line"><div class="project-number">S1</div><div><b>Solo freelancer · Days 27–60 and after</b><p>You do the work yourself: 1 narrow service, a demo, and steady outreach. Uses Missions 17, 33, 34. <b>Gate:</b> 3 completed jobs (paid or paid-trial) with honest feedback.</p></div></div>
+          <div class="project-line"><div class="project-number">S2</div><div><b>Productized service</b><p>Turn what clients keep asking for into one fixed offer: clear scope, price, timeline, and a handoff README. Uses Missions 32, 33. <b>Gate:</b> the same offer sold at least 3 times, and you can deliver it without improvising.</p></div></div>
+          <div class="project-line"><div class="project-number">S3</div><div><b>Agency</b><p>You handle sales and quality checks; part-time helpers (VA, junior dev, designer) handle delivery. Hire only when work is steady. Before taking bigger clients or paying others, check with DTI and BIR what registration you need. This is not legal or tax advice.</p></div></div>
+        </div>
+        <div class="panel"><h3>Delivery checklist (every client)</h3><div class="sub">The habits that make you reliable. They come straight from the missions.</div>
+          <div class="rule"><i>✓</i><span>Written scope: what is included and what is not.</span></div>
+          <div class="rule"><i>✓</i><span>Test with sample data first (Mission 31), then run on the client's data.</span></div>
+          <div class="rule"><i>✓</i><span>Secrets in environment variables, never in code or repos (Mission 14).</span></div>
+          <div class="rule"><i>✓</i><span>Logs and clear error messages so failures are visible (Missions 11, 15).</span></div>
+          <div class="rule"><i>✓</i><span>Human approval before anything is sent or changed for real (Missions 23, 28).</span></div>
+          <div class="rule"><i>✓</i><span>README handoff so the client or a teammate can run it (Mission 32).</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <div class="section-head"><div><div class="section-kicker">04 / Operating protocol</div><h2>THE NO-WASTE RULES</h2></div></div>
+      <div class="lower-grid" style="margin-top:0">
+        <div class="panel"><h3>What to learn now vs later</h3><div class="sub">Keep the critical path narrow so you can build and start applying.</div>
+          <div class="rule"><i>✓</i><span><b>NOW:</b> Python core, files/CSV/JSON, Git/GitHub, HTTP/Requests, auth/secrets, timeouts/retries, SQL/SQLite basics, LLM API, structured output validation, n8n, basic FastAPI, tests/logs, project docs.</span></div>
+          <div class="rule"><i>→</i><span><b>LATER:</b> Docker deep dive, cloud certifications, advanced algorithms, full frontend frameworks, multiple automation platforms, advanced agent frameworks, machine learning from scratch. Learn a later topic only when a real project needs it.</span></div>
+          <div class="rule"><i>×</i><span><b>NOT NEEDED FOR THIS TARGET RIGHT NOW:</b> deep exploit development, Wireshark/Scapy packet analysis, PowerShell mastery, advanced networking, reverse engineering, pentesting tools. These belong to other paths, not the shortest route to Python AI integration.</span></div>
+        </div>
+        <div class="panel"><h3>Mission protocol</h3><div class="sub">The bar for checking a quest as clear.</div>
+          <div class="rule"><i>01</i><span>Learn one concept, then close the tutorial and recreate it from memory.</span></div>
+          <div class="rule"><i>02</i><span>Make one small output every study session. Code beats passive video time.</span></div>
+          <div class="rule"><i>03</i><span>Use AI as a tutor and reviewer, not as a black box. You must be able to explain the code and test it.</span></div>
+          <div class="rule"><i>04</i><span>Use synthetic data for demos; protect client information, credentials, and private records.</span></div>
+          <div class="rule"><i>05</i><span>Start income attempts as soon as Project 02 is credible. Be honest about your level; getting a client/job is never guaranteed by a checklist.</span></div>
+          <div class="rule"><i>06</i><span>Protect sleep, meals, and movement. A repeatable 4–6 focused hours is better than an unsustainable marathon.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="focusbar"><div class="focus-left"><div class="focus-glyph">⏱</div><div><div class="focus-label">FOCUS SPRINT // SINGLE OBJECTIVE</div><div class="focus-sub">25 minutes on one quest. Pause, then take a break.</div></div></div><div class="timer" id="timerDisplay">25:00</div><div class="timer-actions"><button class="btn btn-primary" id="timerStart">START</button><button class="btn" id="timerReset">RESET</button></div></div>
+    <footer><span>NEON//OPS · PYTHON AI AUTOMATION & INTEGRATION · v1.0</span><div class="footer-right"><span>Progress saves in this browser.</span><button id="resetBtn">Reset campaign</button></div></footer>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-const B={p:"https://docs.python.org/3/",a:"https://automatetheboringstuff.com/2e/",m:"https://developer.mozilla.org/en-US/docs/Web/",r:"https://realpython.com/",sl:"https://www.sqlitetutorial.net/",pt:"https://docs.pytest.org/en/stable/",n:"https://docs.n8n.io/",c:"https://docs.claude.com/",dk:"https://docs.docker.com/",g:"https://docs.github.com/",ms:"https://learn.microsoft.com/en-us/powershell/",gnu:"https://www.gnu.org/",cf:"https://www.cloudflare.com/learning/",ws:"https://www.wireshark.org/docs/wsug_html_chunked/",sc:"https://scapy.readthedocs.io/en/latest/",pd:"https://docs.pydantic.dev/latest/",rq:"https://requests.readthedocs.io/en/latest/",w:""};
-const nb="integrations/builtin/core-nodes/n8n-nodes-base.";
-const W=[
-["Week 1 · Python Foundation","PRTO: F-02 Python foundation",[
-["Setup + basics","Install Python, VS Code, Git, GitHub. Variables, strings, input/output. Push ang Hello program.",["w:https://www.python.org/downloads/|Download Python","w:https://code.visualstudio.com/docs/python/python-tutorial|VS Code Python setup","g:get-started/start-your-journey/hello-world|GitHub Hello World","a:chapter1/|ATBS Ch.1 Python Basics","r:python-input-output/|Real Python: Input/Output"]],
-["Conditions","if/elif/else, boolean logic. Build: Input Validator.",["a:chapter2/|ATBS Ch.2 Flow Control","p:tutorial/controlflow.html#if-statements|Python docs: if statements","r:python-conditional-statements/|Real Python: Conditionals"]],
-["Loops","for, while, range. Build: Log Counter.",["p:tutorial/controlflow.html#for-statements|Python docs: for","p:tutorial/controlflow.html#the-range-function|Python docs: range()","r:python-for-loop/|Real Python: for loop","r:python-while-loop/|Real Python: while loop"]],
-["Data structures","list, tuple, set, dict. Build: Customer Data Processor.",["a:chapter4/|ATBS Ch.4 Lists","a:chapter5/|ATBS Ch.5 Dictionaries","p:tutorial/datastructures.html|Python docs: Data Structures","r:python-data-structures/|Real Python: Data Structures"]],
-["Functions","Parameters, return, scope. Refactor Days 1–4.",["a:chapter3/|ATBS Ch.3 Functions","p:tutorial/controlflow.html#defining-functions|Python docs: functions","r:defining-your-own-python-function/|Real Python: Functions"]],
-["Modules & venv","imports, venv, pip. Gawa ng automation-lab/.",["p:tutorial/modules.html|Python docs: Modules","p:tutorial/venv.html|Python docs: venv","r:python-virtual-environments-a-primer/|Real Python: venv primer","r:python-application-layouts/|Project layouts"]],
-["Mini Project 1","File Automation Utility: read → classify → rename → move → report.",["a:chapter10/|ATBS Ch.10 Organizing Files","a:chapter9/|ATBS Ch.9 Reading/Writing Files"],1]]],
-["Week 2 · Real Python for Automation","PRTO: continue F-02",[
-["Files & pathlib","Build: folder scanner.",["p:library/pathlib.html|pathlib docs","r:python-pathlib/|Real Python: pathlib","p:tutorial/inputoutput.html#reading-and-writing-files|Docs: open()"]],
-["CSV & JSON","CSV→JSON at JSON→CSV.",["p:library/csv.html|csv docs","p:library/json.html|json docs","r:python-csv/|Real Python: CSV","r:python-json/|Real Python: JSON"]],
-["Error handling","try/except/finally, custom errors.",["p:tutorial/errors.html|Python docs: Errors","r:python-exceptions/|Real Python: Exceptions","a:chapter11/|ATBS Ch.11 Debugging"]],
-["Logging","Levels, timestamps, logs/app.log.",["p:howto/logging.html#logging-basic-tutorial|Logging basic tutorial","p:howto/logging-cookbook.html|Logging cookbook","r:python-logging/|Real Python: Logging"]],
-["Regex","Email/phone/ID extractor.",["a:chapter7/|ATBS Ch.7 Regex","p:howto/regex.html|Regex HOWTO","r:regex-python/|Real Python: Regex"]],
-["CLI arguments","python cleaner.py --input data.csv --output clean.csv",["p:howto/argparse.html|argparse HOWTO","r:command-line-interfaces-python-argparse/|Real Python: argparse"]],
-["Project 01","Business Data Cleaner: validate → clean → dedupe → normalize → JSON/CSV → logs.",["a:chapter16/|ATBS Ch.16 CSV & JSON","p:library/logging.html|logging docs"],1]]],
-["Week 3 · HTTP + APIs","Money zone. Start applying sa Day 21.",[
-["HTTP basics","request, response, status codes, headers.",["m:HTTP/Overview|MDN: HTTP Overview","m:HTTP/Messages|MDN: HTTP Messages","m:HTTP/Status|MDN: Status Codes","m:HTTP/Headers|MDN: Headers"]],
-["HTTP methods","GET, POST, PUT, DELETE.",["m:HTTP/Methods|MDN: Methods","m:HTTP/Methods/POST|MDN: POST","m:HTTP/Methods/PUT|MDN: PUT"]],
-["requests library","Build API client.",["rq:user/quickstart/|requests Quickstart","r:python-requests/|Real Python: requests"]],
-["Secrets","API keys, .env, environment variables.",["w:https://12factor.net/config|12-Factor: Config","w:https://saurabh-kumar.com/python-dotenv/|python-dotenv docs","w:https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html|OWASP: Secrets Management"]],
-["Robust APIs","JSON parsing, pagination, rate limits, retries.",["rq:user/quickstart/#timeouts|requests: timeouts","w:https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html#urllib3.util.Retry|urllib3 Retry","c:en/api/rate-limits|Example: API rate limits"]],
-["API → CSV exporter","Build it.",["rq:user/quickstart/#json-response-content|requests: JSON responses","p:library/csv.html#csv.DictWriter|csv.DictWriter"]],
-["Project 02","API Automation Engine. Simulan ang applications.",["w:https://www.upwork.com/nx/search/jobs/?q=python%20automation|Upwork: python automation","w:https://www.onlinejobs.ph/|OnlineJobs.ph","w:https://ph.jobstreet.com/python-automation-jobs|JobStreet PH"],1]]],
-["Week 4 · SQL + Data Pipelines","",[
-["SQL basics","SELECT, WHERE, ORDER BY.",["w:https://sqlbolt.com/|SQLBolt (interactive)","sl:sqlite-select/|SELECT","sl:sqlite-where/|WHERE","sl:sqlite-order-by/|ORDER BY"]],
-["Modify data","INSERT, UPDATE, DELETE.",["sl:sqlite-insert/|INSERT","sl:sqlite-update/|UPDATE","sl:sqlite-delete/|DELETE"]],
-["Joins & aggregates","JOIN, GROUP BY, COUNT, SUM.",["sl:sqlite-inner-join/|INNER JOIN","sl:sqlite-group-by/|GROUP BY","sl:sqlite-count-function/|COUNT","sl:sqlite-sum-function/|SUM"]],
-["sqlite3 in Python","Build: CSV → SQLite.",["p:library/sqlite3.html|sqlite3 docs","sl:sqlite-python/|SQLite Python tutorial"]],
-["API → SQLite","Build it.",["p:library/sqlite3.html#sqlite3-placeholders|Parameterized queries","rq:user/quickstart/|requests Quickstart"]],
-["SQLite → report","Build it.",["p:library/sqlite3.html#how-to-use-the-connection-context-manager|Connection context manager","w:https://jinja.palletsprojects.com/en/stable/templates/|Jinja2 templates (HTML report)"]],
-["Project 03","Automated Reporting Pipeline → HTML report.",["p:library/sqlite3.html|sqlite3 docs"],1]]],
-["Week 5 · Professional Python","",[
-["Project structure","src/ tests/ config/ logs/ docs/",["r:python-application-layouts/|Real Python: App layouts","w:https://packaging.python.org/en/latest/tutorials/packaging-projects/|Python Packaging guide"]],
-["pytest","Unit testing basics.",["pt:getting-started.html|pytest Getting Started","pt:how-to/assert.html|pytest: assert","r:pytest-python-testing/|Real Python: pytest"]],
-["Write 10 tests","Cover ang Projects 01–03.",["pt:how-to/fixtures.html|pytest: fixtures","pt:how-to/parametrize.html|pytest: parametrize","pt:how-to/tmp_path.html|pytest: tmp_path"]],
-["Resilience","retries, timeout, error recovery.",["rq:user/quickstart/#timeouts|requests: timeouts","w:https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html#urllib3.util.Retry|urllib3 Retry"]],
-["Config",".env, config files.",["w:https://12factor.net/config|12-Factor: Config","p:library/configparser.html|configparser"]],
-["Git workflow","branch, commit, merge, pull request.",["w:https://learngitbranching.js.org/|Learn Git Branching","w:https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell|Pro Git: Branching","g:pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests|GitHub: Pull Requests"]],
-["Clean GitHub","README: Problem, Solution, Architecture, Install, Usage, Tests, Limitations.",["w:https://www.makeareadme.com/|Make a README","g:get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax|GitHub Markdown syntax"],1]]],
-["Week 6 · n8n","",[
-["n8n basics","workflow, trigger, node, execution.",["n:courses/level-one/|n8n Course: Level 1","n:workflows/|Workflows overview"]],
-["Webhook → Sheet","Webhook → n8n → Google Sheet.",["n:"+nb+"webhook/|Webhook node","n:integrations/builtin/app-nodes/n8n-nodes-base.googlesheets/|Google Sheets node"]],
-["Form → API","Form → n8n → API.",["n:"+nb+"formtrigger/|Form Trigger","n:"+nb+"httprequest/|HTTP Request node"]],
-["Webhook → Python → API","Ikonekta ang Python sa n8n.",["n:code/code-node/|Code node","n:"+nb+"httprequest/|HTTP Request node","w:https://fastapi.tiangolo.com/tutorial/first-steps/|FastAPI first steps (Python endpoint)"]],
-["Logic","branching, conditions, loops.",["n:flow-logic/splitting/|Splitting/branching","n:flow-logic/looping/|Looping","n:courses/level-two/|n8n Course: Level 2"]],
-["Credentials & errors","credentials, webhooks, error handling.",["n:credentials/|Credentials","n:flow-logic/error-handling/|Error handling"]],
-["Project 04","Business Workflow: Form → n8n → Python → API → DB → notification.",["n:courses/level-two/|n8n Course: Level 2"],1]]],
-["Week 7 · AI Integration","Never blindly trust AI output.",[
-["LLM API basics","messages, system instructions, structured output.",["c:en/api/overview|Claude API overview","c:en/api/messages-examples|Messages examples","w:https://platform.openai.com/docs/guides/structured-outputs|OpenAI: Structured Outputs"]],
-["Text classification","text → LLM → class.",["c:en/docs/build-with-claude/prompt-engineering/overview|Prompt engineering overview","c:en/docs/build-with-claude/prompt-engineering/system-prompts|System prompts"]],
-["Document → JSON","Extract structured data.",["pd:concepts/models/|Pydantic: Models","pd:concepts/json/|Pydantic: JSON parsing"]],
-["Validation","Validate ang output gamit ang schema.",["pd:concepts/validators/|Pydantic: Validators","pd:concepts/fields/|Pydantic: Fields"]],
-["Retry/timeout/fallback","Reliability layer.",["c:en/api/errors|API errors","c:en/api/rate-limits|Rate limits"]],
-["Track tokens/cost/latency","Metrics at error tracking.",["c:en/docs/build-with-claude/token-counting|Token counting","p:library/time.html#time.perf_counter|time.perf_counter"]],
-["Project 05","AI Document Processor: doc → LLM → JSON → validation → DB → report.",["pd:concepts/models/|Pydantic: Models"],1]]],
-["Week 8 · AI Workflow Systems","",[
-["n8n → AI API","Ikonekta.",["n:"+nb+"httprequest/|HTTP Request node","n:advanced-ai/|n8n AI overview"]],
-["AI → Python","Round-trip.",["n:code/code-node/|Code node","n:"+nb+"webhook/|Webhook node"]],
-["Python → CRM/API","Push results.",["rq:user/quickstart/#make-a-request|requests: POST","m:HTTP/Methods/POST|MDN: POST"]],
-["Human approval step","AI → approval → action.",["n:"+nb+"wait/|Wait node","n:"+nb+"if/|If node"]],
-["Monitoring","Add monitoring.",["n:flow-logic/error-handling/|Error workflows","n:workflows/executions/|Executions"]],
-["Logs","Central logs.",["p:howto/logging-cookbook.html|Logging cookbook"]],
-["Project 06","AI Lead Automation: Lead → n8n → Python → AI score → CRM → notification.",["n:courses/level-two/|n8n Course: Level 2"],1]]],
-["Week 9 · Deployment","Script writer → automation engineer.",[
-["Linux basics","SSH, processes, permissions.",["w:https://overthewire.org/wargames/bandit/bandit0.html|Bandit Level 0 (SSH)","w:https://linuxjourney.com/lesson/file-permissions|Linux Journey: Permissions","w:https://linuxcommand.org/tlcl.php|The Linux Command Line"]],
-["Docker","Concepts at commands.",["dk:get-started/|Docker Get Started","dk:get-started/docker-concepts/the-basics/what-is-a-container/|What is a container?"]],
-["Containerize Python app","Dockerfile.",["dk:guides/python/|Docker: Python guide","dk:reference/dockerfile/|Dockerfile reference"]],
-["n8n in Docker","Self-host.",["n:hosting/installation/docker/|n8n Docker install","dk:compose/gettingstarted/|Compose getting started"]],
-["Docker essentials","env vars, volumes, networking.",["dk:engine/storage/volumes/|Volumes","dk:engine/network/|Networking","dk:compose/how-tos/environment-variables/|Env variables"]],
-["Deploy one project","Live!",["dk:get-started/|Docker Get Started"]],
-["Document deployment","Write the steps.",["w:https://www.makeareadme.com/|Make a README"],1]]],
-["Week 10 · PowerShell + Bash","PRTO merge point.",[
-["PowerShell I","commands, objects, pipeline.",["ms:scripting/learn/ps101/01-getting-started|PS101: Getting Started","ms:scripting/learn/ps101/02-help-system|PS101: Help System","ms:scripting/learn/ps101/03-discovering-objects|PS101: Objects"]],
-["PowerShell II","pipeline, files, processes.",["ms:scripting/learn/ps101/04-pipelines|PS101: Pipelines","ms:module/microsoft.powershell.management/get-process|Get-Process"]],
-["PowerShell inventory","system, service, process inventory.",["ms:module/microsoft.powershell.management/get-service|Get-Service","ms:module/microsoft.powershell.utility/convertto-json|ConvertTo-Json"]],
-["Bash","pipes, redirects, grep, awk, sed.",["gnu:software/bash/manual/html_node/Pipelines.html|Bash: Pipelines","gnu:software/bash/manual/html_node/Redirections.html|Bash: Redirections","gnu:software/grep/manual/grep.html|grep manual","gnu:software/sed/manual/sed.html|sed manual","gnu:software/gawk/manual/gawk.html|gawk manual"]],
-["system.sh","Bash script.",["gnu:software/bash/manual/html_node/Shell-Scripts.html|Bash: Shell Scripts","w:https://linuxcommand.org/tlcl.php|The Linux Command Line"]],
-["Python consumes output","Parse PowerShell/Bash output.",["p:library/subprocess.html|subprocess docs","r:python-subprocess/|Real Python: subprocess"]],
-["Project 07","Cross-platform System Inventory → JSON → Python → report.",["p:library/json.html|json docs"],1]]],
-["Week 11 · Security Automation","PRTO: F-04 Networking",[
-["Networking refresh","IP, TCP, UDP, DNS, HTTP, TLS.",["cf:network-layer/what-is-an-ip-address/|What is an IP address?","cf:ddos/glossary/tcp-ip/|TCP/IP","cf:ddos/glossary/user-datagram-protocol-udp/|UDP","cf:dns/what-is-dns/|DNS","cf:ssl/what-is-ssl/|SSL/TLS"]],
-["Python sockets","TCP client + server.",["p:howto/sockets.html|Socket HOWTO","r:python-sockets/|Real Python: Sockets","w:https://beej.us/guide/bgnet/html/|Beej's Network Guide"]],
-["Wireshark","Capture ang sarili mong lab traffic.",["ws:ChapterCapture.html|Capturing","ws:ChapterWork.html|Display filters","w:https://wiki.wireshark.org/SampleCaptures|Sample captures"]],
-["Packet parsing","Python + Scapy.",["sc:usage.html|Scapy usage","sc:introduction.html|Scapy intro"]],
-["Build the tool","PCAP → protocols, IPs, ports, HTTP metadata.",["sc:usage.html|Scapy: read pcap","ws:ChapterWork.html|Display filters"]],
-["Polish","CLI, logs, tests, README.",["p:howto/argparse.html|argparse HOWTO","pt:getting-started.html|pytest"]],
-["Project 08","Network Analysis Tool + demo video.",["w:https://owasp.org/www-project-top-ten/|OWASP Top 10"],1]]],
-["Week 12 · Flagship Project X","AI + Python Business Automation Platform",[
-["Pick a real problem","Lead processing, onboarding, invoices, reports, ticket triage.",["w:https://www.upwork.com/nx/search/jobs/?q=ai%20automation|Upwork: AI automation","w:https://ph.jobstreet.com/ai-automation-jobs|JobStreet PH: AI automation"]],
-["Design architecture","Webhook → n8n → Python/AI/DB → validation → action.",["n:workflows/|n8n workflows","w:https://owasp.org/API-Security/|OWASP API Security"]],
-["Python backend","Build.",["w:https://fastapi.tiangolo.com/tutorial/|FastAPI tutorial","pd:concepts/models/|Pydantic"]],
-["n8n workflow","Build.",["n:"+nb+"webhook/|Webhook node","n:code/code-node/|Code node"]],
-["AI integration","Add LLM step.",["c:en/api/overview|Claude API overview","pd:concepts/validators/|Validate output"]],
-["Harden","tests, logging, error handling, security.",["pt:how-to/fixtures.html|pytest fixtures","p:howto/logging-cookbook.html|Logging cookbook","w:https://owasp.org/API-Security/|OWASP API Security"]],
-["Deploy","Ship it.",["dk:guides/python/|Docker: Python guide"],1]]],
-["Days 85–90 · Monetization","",[
-["Freelance profile","Position: AI Automation & Python Integration Developer.",["w:https://www.upwork.com/|Upwork","w:https://www.onlinejobs.ph/|OnlineJobs.ph"]],
-["3 offers","Python Automation · API Integration · AI Workflow Automation.",["w:https://www.upwork.com/nx/search/jobs/?q=api%20integration|Upwork: API integration jobs"]],
-["Portfolio","Projects 01–04 + X: Problem, Before, Architecture, After, Demo, Code, Result.",["g:pages/getting-started-with-github-pages/creating-a-github-pages-site|GitHub Pages portfolio","w:https://www.makeareadme.com/|Make a README"]],
-["Targeted applications","Search: AI automation, Python automation, n8n.",["w:https://www.upwork.com/nx/search/jobs/?q=n8n|Upwork: n8n","w:https://ph.jobstreet.com/n8n-jobs|JobStreet PH: n8n"]],
-["5–10 proposals","Targeted lang, may relevant project sa bawat isa.",["w:https://www.upwork.com/nx/search/jobs/?q=python%20api|Upwork: python api"]],
-["Productized service","'I will audit one repetitive process and build a working prototype.'",["w:https://www.upwork.com/|Upwork"]]]]
-];
+(() => {
+  const STORAGE_KEY = 'neonOpsPythonAutomationCampaignV1';
+  const quests = [...document.querySelectorAll('.quest')];
+  const checks = [...document.querySelectorAll('.quest-check')];
+  const projectIds = ['q07','q10','q16','q20','q24','q29','q35'];
+  const portfolioProjectIds = ['q10','q16','q20','q24','q29'];
+  let activeFilter = 'all';
+  let timerSeconds = 25 * 60;
+  let timerInterval = null;
+  const $ = (id) => document.getElementById(id);
 
-const STORAGE_KEY="cyberquest90_v2";
-const state=(()=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||localStorage.getItem("cyberquest90_v1")||"{}")}catch(e){return {}}})();
-state.done=state.done||{};state.whys=state.whys||["",""];state.energy=state.energy||"OK";state.mode=state.mode||"CLIENT";
-state.days=state.days||{};state.ach=state.ach||{};state.bonus=state.bonus||0;state.sprints=state.sprints||0;state.mute=!!state.mute;
-const LEN={LOW:45,OK:90,HIGH:90},SXP={LOW:20,OK:40,HIGH:60};
-const sprintLen=()=>(LEN[state.energy]||90)*60;
-if(!state.timer||state.timer.total==null)state.timer={running:false,endAt:0,remaining:sprintLen(),total:sprintLen()};
-const root=document.getElementById("root"),$=id=>document.getElementById(id),BASE_TITLE=document.title;
-const calm=matchMedia("(prefers-reduced-motion: reduce)").matches;
-let n=0,total=0,projectCount=0;
-
-function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function dkey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-function xpForDay(i,isProject){return isProject?180:100}
-const doneN=()=>Object.values(state.done).filter(Boolean).length;
-const flat=()=>W.flatMap(w=>w[2]);
-const bossN=()=>flat().filter(d=>d[3]&&state.done["d"+d.__id]).length;
-const weekDone=wi=>W[wi][2].every(d=>state.done["d"+d.__id]);
-function xpTotal(){let xp=state.bonus;flat().forEach(d=>{if(state.done["d"+d.__id])xp+=xpForDay(d.__id,d[3])});return xp}
-function levelFromXP(xp){return Math.floor(xp/500)+1}
-function rankForLevel(l){return l>=18?"CYBER//ARCHON":l>=14?"ZERO-DAY HUNTER":l>=10?"RED TEAM RUNNER":l>=7?"AUTOMATION RUNNER":l>=4?"SCRIPT SPLICER":"ROOKIE OPERATIVE"}
-function streak(){let s=0,d=new Date();if(!state.days[dkey(d)])d.setDate(d.getDate()-1);while(state.days[dkey(d)]>0){s++;d.setDate(d.getDate()-1)}return s}
-function nextIncomplete(){for(let i=1;i<=total;i++)if(!state.done["d"+i])return i;return total}
-function currentLesson(num){let f=null,idx=0;W.forEach(w=>w[2].forEach(d=>{idx++;if(idx===num)f={w,d,idx}}));return f}
-
-/* ---------- FX ---------- */
-let AC=null;
-function sfx(t){if(state.mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
-  const seq={clear:[523,659,784],boss:[392,523,659,784,1047],lvl:[523,659,784,1047,1319],ach:[784,988,1175],win:[659,784,988,1319],undo:[330,262]}[t]||[440];
-  seq.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain(),s=AC.currentTime+i*.09;o.type="square";o.frequency.value=f;o.connect(g);g.connect(AC.destination);
-    g.gain.setValueAtTime(.05,s);g.gain.exponentialRampToValueAtTime(.001,s+.14);o.start(s);o.stop(s+.15)})}catch(e){}}
-function floatXP(txt,el){if(calm)return;const r=el.getBoundingClientRect(),s=document.createElement("div");s.className="fx";s.textContent=txt;s.style.left=r.left+"px";s.style.top=r.top+"px";document.body.appendChild(s);setTimeout(()=>s.remove(),1000)}
-function confetti(k){if(calm)return;const c=["#34f5ff","#ff3cac","#b8ff4a","#ffcc66","#9b5cff"];
-  for(let i=0;i<k;i++){const p=document.createElement("i"),a=Math.random()*6.28,d=120+Math.random()*220;p.className="cf";
-    p.style.cssText=`left:50%;top:40%;background:${c[i%5]};--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d+80}px`;document.body.appendChild(p);setTimeout(()=>p.remove(),1300)}}
-function toast(title,msg,cls){const t=document.createElement("div");t.className="toast "+(cls||"");t.innerHTML=`<b>${esc(title)}</b>${esc(msg)}`;$("toasts").appendChild(t);setTimeout(()=>t.remove(),4500)}
-function modal(title,html,cls){const o=document.createElement("div");o.className="ov";
-  o.innerHTML=`<div class="box ${cls||""}"><h2>${title}</h2>${html}<div class="quest-controls" style="justify-content:center"><button class="primary">Continue</button></div></div>`;
-  o.addEventListener("click",e=>{if(e.target===o||e.target.tagName==="BUTTON")o.remove()});document.body.appendChild(o);o.querySelector("button").focus()}
-
-/* ---------- ACHIEVEMENTS ---------- */
-const ACH=[
-["first","🩸","FIRST BLOOD","Clear your first quest",()=>doneN()>=1,50],
-["s3","🔥","3-DAY COMBO","3-day streak",()=>streak()>=3,75],
-["s7","⚔️","WEEK WARRIOR","7-day streak",()=>streak()>=7,150],
-["s30","☄️","UNSTOPPABLE","30-day streak",()=>streak()>=30,500],
-["boss1","👹","BOSS SLAYER","Defeat 1 boss",()=>bossN()>=1,100],
-["bossall","👑","BOSS RUSH","Defeat every boss",()=>projectCount>0&&bossN()>=projectCount,400],
-["sector","🗺️","SECTOR CLEARED","Finish a full sector",()=>W.some((w,i)=>weekDone(i)),120],
-["half","⛰️","HALFWAY HACKER","45 days cleared",()=>doneN()>=45,300],
-["f1","⏱️","FOCUS INITIATE","Win 1 focus sprint",()=>state.sprints>=1,50],
-["f10","🧠","DEEP WORK","Win 10 focus sprints",()=>state.sprints>=10,200],
-["all","🏆","CAMPAIGN COMPLETE","Clear all 90 days",()=>doneN()>=total,1000]
-];
-function checkAch(){ACH.forEach(a=>{if(!state.ach[a[0]]&&a[4]()){state.ach[a[0]]=1;state.bonus+=a[5];toast("🏆 "+a[2],"+"+a[5]+" XP bonus · "+a[3],"ach");sfx("ach")}})}
-function renderAch(){$("achCount").textContent=ACH.filter(a=>state.ach[a[0]]).length+" / "+ACH.length;
-  $("ach").innerHTML=ACH.map(a=>`<div class="a${state.ach[a[0]]?" on":""}"><b>${state.ach[a[0]]?a[1]:"🔒"} ${a[2]}</b><small>${a[3]} · +${a[5]} XP</small></div>`).join("")}
-
-/* ---------- QUEST LIST ---------- */
-W.forEach((w,wi)=>{
-  const dt=document.createElement("details");dt.className="w";if(wi===0)dt.open=true;
-  let h=`<summary><span class="week-title"><span class="week-tag">SECTOR ${String(wi+1).padStart(2,"0")}</span><span>${esc(w[0])}<small>${esc(w[1]||"")}</small></span></span><span class="sp" id="sp${wi}">0/${w[2].length}</span></summary>`;
-  w[2].forEach(d=>{
-    const id="d"+(++n);d.__id=n;total++;const isProj=!!d[3];if(isProj)projectCount++;
-    h+=`<div class="d${state.done[id]?" done":""}" id="r${id}"><label><input type="checkbox" data-id="${id}"${state.done[id]?" checked":""}><span><b>DAY ${n}: ${esc(d[0])}</b><p>${esc(d[1])}</p>
-      <span class="day-meta"><span class="xpchip">+${xpForDay(n,isProj)} XP</span>${isProj?'<span class="projectchip">BOSS FIGHT</span>':""}</span></span></label>
-      <div class="ln">${d[2].map(k=>{const[r,t]=k.split("|"),i=r.indexOf(":");return `<a href="${B[r.slice(0,i)]+r.slice(i+1)}" target="_blank" rel="noopener">${esc(t)}</a>`}).join("")}</div></div>`;
-  });
-  dt.innerHTML=h;root.appendChild(dt);
-});
-const totalDays=total;
-
-let lastLvl=null;
-function updateHUD(){
-  const done=doneN(),xp=xpTotal(),lvl=levelFromXP(xp),pct=Math.min(100,done/totalDays*100),into=xp%500;
-  $("dayCount").textContent=`${done} / ${totalDays}`;$("xp").textContent=xp;$("level").textContent=lvl;$("rank").textContent=rankForLevel(lvl);
-  $("streak").textContent=streak();$("bosses").textContent=bossN()+" / "+projectCount;$("pb").style.width=pct+"%";
-  $("progressText").textContent=`${done} / ${totalDays} DAYS CLEARED · ${Math.round(pct)}%`;
-  $("lb").style.width=into/5+"%";$("lvlText").textContent=`LV ${lvl} → ${lvl+1}`;$("lvlXp").textContent=`${into} / 500 XP · ${rankForLevel(lvl)}`;
-  W.forEach((w,wi)=>{const c=w[2].filter(d=>state.done["d"+d.__id]).length,el=$("sp"+wi);el.textContent=(c===w[2].length?"✔ ":"")+c+"/"+w[2].length;el.style.setProperty("--p",c/w[2].length*100+"%")});
-  renderAch();
-  const next=nextIncomplete(),lesson=currentLesson(next);
-  if(done<totalDays&&lesson){
-    $("contractDay").textContent="DAY "+next;$("contractTitle").textContent=lesson.d[0];$("contractDesc").textContent=lesson.d[1];
-    $("contractXP").textContent="+"+xpForDay(next,lesson.d[3])+" XP";$("contractBoss").textContent=lesson.d[3]?"BOSS FIGHT":"STANDARD QUEST";
-  }else{
-    $("contractDay").textContent="ALL CLEARED";$("contractTitle").textContent="90-DAY CAMPAIGN COMPLETE";$("contractDesc").textContent="You reached the end of the campaign. Start the next difficulty.";
+  function loadState(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
   }
-  if(lastLvl!==null&&lvl>lastLvl){sfx("lvl");confetti(70);modal("⬆ LEVEL UP!",`<p style="font-size:2rem;margin:4px 0;color:var(--text)"><b>LEVEL ${lvl}</b></p><p>Rank: ${rankForLevel(lvl)}</p>`,"lvl")}
-  lastLvl=lvl;
-}
-
-root.addEventListener("change",e=>{
-  const id=e.target.dataset.id;if(!id)return;
-  const on=e.target.checked,k=dkey(new Date());
-  state.done[id]=on;$("r"+id).classList.toggle("done",on);
-  state.days[k]=Math.max(0,(state.days[k]||0)+(on?1:-1));
-  if(on){
-    const num=+id.slice(1),d=currentLesson(num).d,boss=!!d[3],xp=xpForDay(num,boss);
-    floatXP("+"+xp+" XP",e.target);sfx(boss?"boss":"clear");confetti(boss?70:22);
-    toast(boss?"👹 BOSS DEFEATED":"✓ QUEST CLEAR","+"+xp+" XP · Day "+num);
-    const wi=W.findIndex(w=>w[2].includes(d));if(weekDone(wi))toast("🗺️ SECTOR CLEARED",W[wi][0],"ach");
-  }else sfx("undo");
-  checkAch();save();updateHUD();
-});
-
-/* ---------- MODES / ENERGY ---------- */
-function setMode(mode){
-  state.mode=mode;
-  document.querySelectorAll(".mode[data-mode]").forEach(el=>el.classList.toggle("active",el.dataset.mode===mode));
-  $("modeCopy").textContent={CLIENT:"Future Me is the client. Deliver an output, not just study time.",SOLO:"Solo run. Optimize for mastery and clean execution.",BOSS:"Boss mode. Hardest meaningful task first, then cleanup."}[mode];
-  save();
-}
-function setEnergy(v,init){
-  state.energy=v;
-  document.querySelectorAll(".mode[data-energy]").forEach(x=>x.classList.toggle("active",x.dataset.energy===v));
-  const t=state.timer;
-  if(!init&&!t.running&&t.remaining===t.total){t.total=t.remaining=sprintLen()}
-  save();renderTimer();
-}
-document.querySelectorAll(".mode[data-mode]").forEach(x=>x.addEventListener("click",()=>setMode(x.dataset.mode)));
-document.querySelectorAll(".mode[data-energy]").forEach(x=>x.addEventListener("click",()=>setEnergy(x.dataset.energy)));
-document.querySelectorAll(".why textarea").forEach((ta,i)=>{ta.value=state.whys[i]||"";ta.addEventListener("input",()=>{state.whys[i]=ta.value;save()})});
-
-/* ---------- FOCUS TIMER (timestamp-based: no drift, survives reload & background tabs) ---------- */
-const tLeft=()=>{const t=state.timer;return t.running?Math.max(0,Math.ceil((t.endAt-Date.now())/1000)):t.remaining};
-function renderTimer(){
-  const t=state.timer,left=tLeft(),mm=String(Math.floor(left/60)).padStart(2,"0"),ss=String(left%60).padStart(2,"0");
-  $("timerText").textContent=mm+":"+ss;
-  $("timerState").textContent=(t.running?"FOCUS // LIVE":left<=0?"SPRINT COMPLETE":left<t.total?"FOCUS // PAUSED":"FOCUS // ARMED")+" · "+state.sprints+" WON · +"+SXP[state.energy]+" XP";
-  $("tpb").style.width=(1-left/t.total)*100+"%";
-  $("timerBox").classList.toggle("live",t.running);
-  document.title=t.running?`⏱ ${mm}:${ss} · CYBER//QUEST`:BASE_TITLE;
-}
-function finishSprint(){
-  const t=state.timer,xp=SXP[state.energy]||40;
-  t.running=false;t.remaining=0;state.sprints++;state.bonus+=xp;
-  sfx("win");confetti(50);checkAch();save();updateHUD();renderTimer();
-  modal("⏱ SPRINT CLEARED",`<p style="font-size:1.4rem;color:var(--lime)"><b>+${xp} XP</b></p><p>Ship the output, then stand up and recover. No extra 20 tasks.</p>`);
-}
-function toggleTimer(){
-  const t=state.timer;
-  if(t.running){t.remaining=tLeft();t.running=false}
-  else{if(t.remaining<=0){t.total=t.remaining=sprintLen()}t.endAt=Date.now()+t.remaining*1000;t.running=true}
-  save();renderTimer();
-}
-function resetTimer(){state.timer={running:false,endAt:0,remaining:sprintLen(),total:sprintLen()};save();renderTimer()}
-setInterval(()=>{if(state.timer.running){if(tLeft()<=0)finishSprint();else renderTimer()}},250);
-$("timerBtn").addEventListener("click",toggleTimer);
-$("resetTimer").addEventListener("click",resetTimer);
-
-/* ---------- BUTTONS ---------- */
-$("markCurrent").addEventListener("click",()=>{
-  const box=document.querySelector(`input[data-id="d${nextIncomplete()}"]`);
-  if(box&&!box.checked){box.checked=true;box.dispatchEvent(new Event("change",{bubbles:true}))}
-});
-$("clearAll").addEventListener("click",()=>{
-  if(!confirm("Reset all quest progress, XP, achievements, streak, timer, and notes?"))return;
-  try{localStorage.removeItem(STORAGE_KEY);localStorage.removeItem("cyberquest90_v1")}catch(e){}
-  location.reload();
-});
-$("compress").addEventListener("click",()=>{
-  const next=nextIncomplete(),l=currentLesson(next);
-  if(l)modal("⚡ COMPRESSION TARGET",`<p><b style="color:var(--text)">DAY ${next} — ${esc(l.d[0])}</b></p><p>Standard: finish inside your planned study block.</p><p>Compression rule: cut the fluff, pick the highest-value output, ship something testable today.</p><p>Do not trade away sleep or recovery.</p>`);
-});
-$("why5").addEventListener("click",()=>{
-  modal("❓ WHY ENGINE",`<p><b style="color:var(--text)">WHY #1</b> → ${esc(state.whys[0]||"Write the real problem.")}</p><p><b style="color:var(--text)">WHY #2</b> → ${esc(state.whys[1]||"Ask why again.")}</p><p>Keep drilling until you reach something actionable.</p>`);
-});
-function paintMute(){$("mute").textContent=state.mute?"🔇 SFX OFF":"🔊 SFX ON"}
-$("mute").addEventListener("click",()=>{state.mute=!state.mute;paintMute();save()});
-
-/* ---------- INIT ---------- */
-paintMute();setMode(state.mode);setEnergy(state.energy,true);
-checkAch();updateHUD();renderTimer();save();
-if(state.timer.running&&tLeft()<=0)finishSprint();
+  let state = loadState();
+  if (!state.completed || typeof state.completed !== 'object') state.completed = {};
+  function saveState(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch { showToast('Browser storage is unavailable. Export your progress as a backup.'); }
+  }
+  function isDone(id){ return !!state.completed[id]; }
+  function rankFor(xp){
+    if(xp>=3000) return ['INTEGRATOR','You shipped the full stack'];
+    if(xp>=2100) return ['BUILDER+','Reliable projects in progress'];
+    if(xp>=1300) return ['BUILDER','Turning concepts into tools'];
+    if(xp>=600) return ['APPRENTICE','Core foundations taking shape'];
+    return ['ROOKIE','First steps start here'];
+  }
+  function showToast(message){
+    const toast = $('toast'); toast.textContent = message; toast.classList.add('show');
+    clearTimeout(showToast._timer); showToast._timer = setTimeout(()=>toast.classList.remove('show'),2600);
+  }
+  function updateUI(){
+    let complete = 0, xp = 0, projects = 0;
+    quests.forEach(q => {
+      const id = q.dataset.id, done = isDone(id), check = q.querySelector('.quest-check');
+      check.checked = done; q.classList.toggle('done', done);
+      if(done){ complete++; xp += Number(q.dataset.xp || 0); if(portfolioProjectIds.includes(id)) projects++; }
+    });
+    const total = quests.length, percent = Math.round(complete/total*100), [rank, foot] = rankFor(xp);
+    $('missionsValue').textContent = `${complete}/${total}`;
+    $('xpValue').textContent = xp.toLocaleString();
+    $('rankValue').textContent = rank;
+    $('rankFoot').textContent = foot;
+    $('projectsValue').textContent = `${projects}/5`;
+    $('sidePercent').textContent = `${percent}%`;
+    $('sideMeter').style.width = `${percent}%`;
+    $('sideCount').textContent = `${complete} / ${total} missions cleared`;
+    document.querySelectorAll('.zone').forEach(zone => {
+      const qs = [...zone.querySelectorAll('.quest')];
+      const done = qs.filter(q=>isDone(q.dataset.id)).length;
+      const count = zone.querySelector('.zone-count');
+      const meter = zone.querySelector('.zone-progress .meter-fill');
+      if(count) count.textContent = `${done} / ${qs.length}`;
+      if(meter) meter.style.width = `${qs.length ? done/qs.length*100 : 0}%`;
+      zone.classList.toggle('zone-cleared', done === qs.length && qs.length > 0);
+    });
+    document.querySelectorAll('[data-achievement]').forEach(el => {
+      const kind=el.dataset.achievement;
+      let unlocked=false;
+      if(kind==='first') unlocked=complete>=1;
+      if(kind==='five') unlocked=complete>=5;
+      if(kind==='project') unlocked=projectIds.some(isDone);
+      if(kind==='api') unlocked=isDone('q16');
+      if(kind==='ai') unlocked=isDone('q24');
+      if(kind==='final') unlocked=isDone('q35');
+      el.classList.toggle('unlocked',unlocked);
+    });
+    applyFilter();
+  }
+  function applyFilter(){
+    const term = $('searchInput').value.trim().toLowerCase();
+    let visibleCount=0;
+    quests.forEach(q=>{
+      const searchable = `${q.dataset.search||''} ${q.innerText||''}`.toLowerCase();
+      const kinds = (q.dataset.kind||'').split(/\s+/);
+      const matchesFilter = activeFilter==='all' || (activeFilter==='project' ? kinds.includes('project') : kinds.includes(activeFilter));
+      const matchesSearch = !term || searchable.includes(term);
+      const visible = matchesFilter && matchesSearch;
+      q.classList.toggle('hidden', !visible);
+      if(visible) visibleCount++;
+    });
+    document.querySelectorAll('.zone').forEach(zone=>{
+      const hasVisible = [...zone.querySelectorAll('.quest')].some(q=>!q.classList.contains('hidden'));
+      zone.classList.toggle('hidden',!hasVisible);
+    });
+    $('emptyState').classList.toggle('hidden', visibleCount>0);
+  }
+  checks.forEach(check=>check.addEventListener('change',()=>{
+    const q=check.closest('.quest'); const wasDone=isDone(q.dataset.id);
+    state.completed[q.dataset.id]=check.checked;
+    saveState(); updateUI();
+    if(check.checked && !wasDone) showToast(`MISSION CLEARED · +${q.dataset.xp} XP`);
+    else if(!check.checked) showToast('Mission reopened. Progress updated.');
+  }));
+  document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    activeFilter=btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b===btn));
+    applyFilter();
+  }));
+  $('searchInput').addEventListener('input',applyFilter);
+  $('continueBtn').addEventListener('click',()=>{
+    activeFilter='all'; $('searchInput').value='';
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));
+    applyFilter();
+    const next=quests.find(q=>!isDone(q.dataset.id));
+    if(!next){showToast('CAMPAIGN CLEARED. Keep shipping and applying.');return;}
+    const zone=next.closest('.zone'); zone.open=true; zone.classList.remove('hidden');
+    next.scrollIntoView({behavior:'smooth',block:'center'});
+    next.style.boxShadow='0 0 0 1px rgba(83,243,237,.8), 0 0 25px rgba(83,243,237,.12)';
+    setTimeout(()=>next.style.boxShadow='',1600);
+  });
+  $('exportBtn').addEventListener('click',()=>{
+    const backup={campaign:'NEON//OPS Python AI Automation',version:1,exportedAt:new Date().toISOString(),completed:state.completed};
+    const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='neon-ops-progress.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);showToast('Progress backup exported.');
+  });
+  $('resetBtn').addEventListener('click',()=>{
+    if(!confirm('Reset all mission progress and XP? Export a backup first if you need one.')) return;
+    state={completed:{}};saveState();updateUI();showToast('Campaign reset. Fresh run started.');
+  });
+  function renderTimer(){const m=String(Math.floor(timerSeconds/60)).padStart(2,'0');const s=String(timerSeconds%60).padStart(2,'0');$('timerDisplay').textContent=`${m}:${s}`;}
+  $('timerStart').addEventListener('click',()=>{
+    if(timerInterval){clearInterval(timerInterval);timerInterval=null;$('timerStart').textContent='RESUME';return;}
+    if(timerSeconds<=0) timerSeconds=25*60;
+    $('timerStart').textContent='PAUSE';
+    timerInterval=setInterval(()=>{timerSeconds--;renderTimer();if(timerSeconds<=0){clearInterval(timerInterval);timerInterval=null;$('timerStart').textContent='START';showToast('FOCUS SPRINT COMPLETE. Take a short break.');}},1000);
+  });
+  $('timerReset').addEventListener('click',()=>{clearInterval(timerInterval);timerInterval=null;timerSeconds=25*60;renderTimer();$('timerStart').textContent='START';});
+  document.querySelectorAll('.navlink').forEach(link=>link.addEventListener('click',()=>{document.querySelectorAll('.navlink').forEach(a=>a.classList.toggle('active',a===link));}));
+  renderTimer();updateUI();
+})();
 </script>
 </body>
 </html>
